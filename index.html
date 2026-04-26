@@ -9,19 +9,14 @@
   <meta name="apple-mobile-web-app-title" content="ShopKeeper">
   <meta name="mobile-web-app-capable" content="yes">
   
-  <!-- PWA Manifest for Android -->
   <link rel="manifest" href="data:application/manifest+json,{
     %22name%22:%22ShopKeeper%20Pro%22,
     %22short_name%22:%22ShopKeeper%22,
-    %22description%22:%22Inventory%20Manager%22,
     %22start_url%22:%22.%22,
     %22display%22:%22standalone%22,
     %22orientation%22:%22portrait%22,
     %22background_color%22:%22%23f1f5f9%22,
-    %22theme_color%22:%22%230f172a%22,
-    %22icons%22:[
-      {%22src%22:%22https://cdn-icons-png.flaticon.com/512/3081/3081559.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}
-    ]
+    %22theme_color%22:%22%230f172a%22
   }">
   
   <title>ShopKeeper Pro</title>
@@ -33,8 +28,6 @@
       padding: 0;
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
-      -webkit-user-select: none;
-      user-select: none;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
     
@@ -63,14 +56,12 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      box-shadow: 0 0 50px rgba(0,0,0,0.3);
     }
     
-    /* Mobile Header */
     .mobile-header {
       background: linear-gradient(135deg, #0f172a, #1e293b);
       color: white;
-      padding: 16px 16px;
+      padding: 12px 16px;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -81,92 +72,63 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     
     .logo {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
     }
-    .logo i { color: #fbbf24; font-size: 24px; }
+    .logo i { color: #fbbf24; font-size: 22px; }
     
     .status-icons {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
     }
     
     .status-dot {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: #16a34a;
-      animation: pulse 2s infinite;
     }
-    .status-dot.offline {
-      background: #ef4444;
-      animation: none;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
+    .status-dot.offline { background: #ef4444; }
     
-    .sync-spin {
-      color: #fbbf24;
-      font-size: 16px;
-      display: none;
-    }
-    .sync-spin.active { display: block; }
-    
-    /* Search Bar */
     .search-container {
       position: relative;
-      margin: 0;
     }
     
     .search-input-wrapper {
       display: flex;
       align-items: center;
       background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(10px);
-      border-radius: 25px;
-      padding: 4px 4px 4px 16px;
+      border-radius: 20px;
+      padding: 2px 2px 2px 12px;
       border: 1px solid rgba(255,255,255,0.2);
     }
     .search-input-wrapper i {
       color: rgba(255,255,255,0.7);
-      font-size: 16px;
+      font-size: 14px;
     }
     .search-input-wrapper input {
       flex: 1;
       background: transparent;
       border: none;
       color: white;
-      padding: 10px 8px;
-      font-size: 15px;
+      padding: 8px 6px;
+      font-size: 14px;
       outline: none;
       width: 100%;
     }
     .search-input-wrapper input::placeholder {
       color: rgba(255,255,255,0.5);
-    }
-    .search-input-wrapper button {
-      background: #fbbf24;
-      border: none;
-      border-radius: 20px;
-      padding: 8px 16px;
-      color: #0f172a;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 14px;
-      white-space: nowrap;
+      font-size: 13px;
     }
     
-    /* Mobile Content Area */
     .mobile-content {
       flex: 1;
       display: flex;
@@ -176,11 +138,10 @@
       padding-bottom: 80px;
     }
     
-    /* Stats Cards */
     .stats-scroll {
       display: flex;
-      gap: 8px;
-      padding: 12px 16px;
+      gap: 6px;
+      padding: 10px 12px;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
@@ -189,186 +150,183 @@
     
     .stat-card {
       background: white;
-      border-radius: 16px;
-      padding: 12px 16px;
-      min-width: 100px;
+      border-radius: 12px;
+      padding: 8px 12px;
+      min-width: 85px;
       flex: 1;
       text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      cursor: default;
     }
     .stat-card i {
-      font-size: 20px;
+      font-size: 16px;
       color: #2563eb;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
+      display: block;
     }
     .stat-card .stat-value {
-      font-size: 22px;
+      font-size: 18px;
       font-weight: 700;
       color: #0f172a;
     }
     .stat-card .stat-label {
-      font-size: 11px;
+      font-size: 10px;
       color: #64748b;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
     
-    /* Quick Actions */
     .quick-actions {
       display: flex;
-      gap: 8px;
-      padding: 0 16px 12px;
+      gap: 6px;
+      padding: 0 12px 8px;
     }
     .quick-action-btn {
       flex: 1;
-      padding: 12px;
-      border-radius: 16px;
+      padding: 10px;
+      border-radius: 12px;
       border: none;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 4px;
       transition: 0.2s;
+      touch-action: manipulation;
     }
     .btn-add {
       background: #2563eb;
       color: white;
     }
-    .btn-add:active { background: #1d4ed8; transform: scale(0.98); }
+    .btn-add:active { background: #1d4ed8; transform: scale(0.97); }
     .btn-reset {
       background: white;
       color: #ef4444;
-      border: 1.5px solid #fecaca;
+      border: 1px solid #fecaca;
     }
     .btn-reset:active { background: #fef2f2; }
     
-    /* Product List */
     .product-list {
       flex: 1;
-      padding: 0 16px;
+      padding: 0 12px;
     }
     
     .section-title {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 600;
       color: #64748b;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+      margin-bottom: 6px;
       padding-left: 4px;
     }
     
     .product-card {
       background: white;
-      border-radius: 16px;
-      padding: 14px;
-      margin-bottom: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      border-left: 4px solid #2563eb;
-      transition: 0.2s;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      border-left: 3px solid #2563eb;
       position: relative;
+      transition: 0.1s;
+      cursor: default;
     }
-    .product-card:active {
-      transform: scale(0.99);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
+    .product-card:active { transform: scale(0.99); }
     
     .product-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .product-name {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       color: #0f172a;
       flex: 1;
+      padding-right: 8px;
     }
     .product-actions {
       display: flex;
-      gap: 12px;
+      gap: 8px;
+      flex-shrink: 0;
     }
-    .product-actions i {
-      font-size: 18px;
-      padding: 6px;
-      border-radius: 8px;
-      transition: 0.2s;
+    .product-actions button {
+      background: none;
+      border: none;
+      font-size: 16px;
+      padding: 4px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+      touch-action: manipulation;
+      min-width: 28px;
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .product-actions .fa-edit {
+    .btn-edit {
       color: #2563eb;
-      background: #eff6ff;
+      background: #eff6ff !important;
     }
-    .product-actions .fa-trash-alt {
+    .btn-delete {
       color: #ef4444;
-      background: #fef2f2;
+      background: #fef2f2 !important;
     }
-    .product-actions i:active { transform: scale(0.9); }
+    .product-actions button:active { transform: scale(0.9); }
     
     .price-row {
       display: flex;
-      gap: 12px;
-      margin-bottom: 8px;
+      gap: 8px;
+      margin-bottom: 6px;
     }
     .price-tag {
       flex: 1;
       background: #f8fafc;
-      padding: 8px 12px;
-      border-radius: 10px;
+      padding: 6px 10px;
+      border-radius: 8px;
     }
     .price-tag .label {
-      font-size: 11px;
+      font-size: 10px;
       color: #64748b;
       text-transform: uppercase;
     }
     .price-tag .value {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
       color: #0f172a;
     }
-    .price-tag .value.sale {
-      color: #16a34a;
-    }
+    .price-tag .value.sale { color: #16a34a; }
     
     .product-meta {
       display: flex;
-      gap: 8px;
+      gap: 4px;
       flex-wrap: wrap;
       align-items: center;
     }
     .meta-badge {
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 12px;
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 10px;
       font-weight: 500;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
     }
-    .badge-date {
-      background: #fef3c7;
-      color: #92400e;
-    }
-    .badge-supplier {
-      background: #e0e7ff;
-      color: #3730a3;
-    }
-    .badge-contact {
-      background: #f1f5f9;
-      color: #64748b;
-    }
+    .badge-date { background: #fef3c7; color: #92400e; }
+    .badge-supplier { background: #e0e7ff; color: #3730a3; }
+    .badge-contact { background: #f1f5f9; color: #64748b; }
     
     .margin-badge {
       position: absolute;
       top: 8px;
       right: 8px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 8px;
+      padding: 3px 6px;
+      border-radius: 6px;
       background: #dcfce7;
       color: #16a34a;
     }
@@ -379,45 +337,41 @@
     
     .empty-state {
       text-align: center;
-      padding: 40px 20px;
+      padding: 30px 16px;
       color: #94a3b8;
     }
     .empty-state i {
-      font-size: 48px;
-      margin-bottom: 12px;
+      font-size: 40px;
+      margin-bottom: 8px;
       display: block;
     }
     .empty-state p {
-      font-size: 16px;
-      margin-bottom: 4px;
+      font-size: 14px;
+      margin-bottom: 2px;
     }
     
-    /* FAB Button */
     .fab {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
-      width: 56px;
-      height: 56px;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       background: #2563eb;
       color: white;
       border: none;
-      box-shadow: 0 8px 24px rgba(37,99,235,0.4);
-      font-size: 24px;
+      box-shadow: 0 6px 20px rgba(37,99,235,0.4);
+      font-size: 22px;
       cursor: pointer;
       z-index: 99;
       display: flex;
       align-items: center;
       justify-content: center;
+      touch-action: manipulation;
       transition: 0.2s;
     }
-    .fab:active {
-      transform: scale(0.9);
-      box-shadow: 0 4px 12px rgba(37,99,235,0.4);
-    }
+    .fab:active { transform: scale(0.9); }
     
-    /* Bottom Sheet Modal */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -430,20 +384,18 @@
       justify-content: center;
       align-items: flex-end;
     }
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
     
     .bottom-sheet {
       background: white;
       width: 100%;
       max-width: 480px;
-      max-height: 85vh;
-      border-radius: 24px 24px 0 0;
-      padding: 20px 16px 32px;
+      max-height: 80vh;
+      border-radius: 20px 20px 0 0;
+      padding: 16px 14px 24px;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      animation: slideUp 0.3s ease;
+      animation: slideUp 0.25s ease;
     }
     @keyframes slideUp {
       from { transform: translateY(100%); }
@@ -451,40 +403,39 @@
     }
     
     .sheet-handle {
-      width: 40px;
+      width: 36px;
       height: 4px;
       background: #cbd5e1;
       border-radius: 2px;
-      margin: 0 auto 16px;
+      margin: 0 auto 12px;
     }
     
     .sheet-title {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
       color: #0f172a;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       text-align: center;
     }
     
     .form-group {
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
     .form-group label {
       display: block;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       color: #475569;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .form-group input {
       width: 100%;
-      padding: 12px 16px;
+      padding: 10px 12px;
       border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      font-size: 15px;
+      border-radius: 10px;
+      font-size: 14px;
       outline: none;
       background: #f8fafc;
-      transition: 0.2s;
     }
     .form-group input:focus {
       border-color: #2563eb;
@@ -493,23 +444,24 @@
     
     .form-row {
       display: flex;
-      gap: 10px;
+      gap: 8px;
     }
     .form-row .form-group {
       flex: 1;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
     
     .btn-full {
       width: 100%;
-      padding: 14px;
-      border-radius: 14px;
+      padding: 12px;
+      border-radius: 12px;
       border: none;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       cursor: pointer;
-      margin-bottom: 8px;
-      transition: 0.2s;
+      margin-bottom: 6px;
+      touch-action: manipulation;
+      transition: 0.1s;
     }
     .btn-full:active { transform: scale(0.98); }
     .btn-save {
@@ -523,23 +475,24 @@
     
     .toast {
       position: fixed;
-      top: 20px;
+      top: 16px;
       left: 50%;
       transform: translateX(-50%);
       background: #0f172a;
       color: white;
-      padding: 12px 24px;
-      border-radius: 25px;
-      font-size: 14px;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 13px;
       font-weight: 500;
       z-index: 300;
       opacity: 0;
       transition: 0.3s;
       pointer-events: none;
+      white-space: nowrap;
     }
     .toast.show {
       opacity: 1;
-      top: 40px;
+      top: 28px;
     }
     .toast.success { background: #16a34a; }
     .toast.error { background: #ef4444; }
@@ -548,7 +501,6 @@
 <body>
 
 <div class="app-container">
-  <!-- Mobile Header -->
   <div class="mobile-header">
     <div class="header-top">
       <div class="logo">
@@ -556,7 +508,6 @@
         <span>ShopKeeper</span>
       </div>
       <div class="status-icons">
-        <i class="fas fa-sync-alt sync-spin" id="syncSpin"></i>
         <div class="status-dot" id="statusDot"></div>
       </div>
     </div>
@@ -564,16 +515,11 @@
       <div class="search-input-wrapper">
         <i class="fas fa-search"></i>
         <input type="text" id="searchInput" placeholder="Search products..." autocomplete="off">
-        <button id="clearSearchBtn" style="display:none;">
-          <i class="fas fa-times"></i>
-        </button>
       </div>
     </div>
   </div>
 
-  <!-- Mobile Content -->
   <div class="mobile-content">
-    <!-- Stats -->
     <div class="stats-scroll">
       <div class="stat-card">
         <i class="fas fa-boxes"></i>
@@ -592,36 +538,30 @@
       </div>
     </div>
 
-    <!-- Quick Actions -->
     <div class="quick-actions">
-      <button class="quick-action-btn btn-add" id="openAddModal">
+      <button class="quick-action-btn btn-add" id="openAddModalBtn">
         <i class="fas fa-plus-circle"></i> Add Entry
       </button>
       <button class="quick-action-btn btn-reset" id="resetBtn">
-        <i class="fas fa-trash-alt"></i> Reset
+        <i class="fas fa-trash-alt"></i> Reset All
       </button>
     </div>
 
-    <!-- Product List -->
     <div class="product-list">
       <div class="section-title">
         <i class="fas fa-clock"></i> Recent Entries
       </div>
-      <div id="productListContainer">
-        <!-- Product cards will be rendered here -->
-      </div>
+      <div id="productListContainer"></div>
     </div>
   </div>
 </div>
 
-<!-- FAB Button -->
 <button class="fab" id="fabAddBtn">
   <i class="fas fa-plus"></i>
 </button>
 
-<!-- Bottom Sheet Modal for Add/Edit -->
 <div class="modal-overlay" id="entryModal">
-  <div class="bottom-sheet">
+  <div class="bottom-sheet" id="bottomSheet">
     <div class="sheet-handle"></div>
     <div class="sheet-title" id="modalTitle">Add New Entry</div>
     
@@ -667,460 +607,484 @@
   </div>
 </div>
 
-<!-- Toast Notification -->
 <div class="toast" id="toast"></div>
 
 <!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-</script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js">
-</script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
-  // ==================== FIREBASE CONFIGURATION ====================
-  // REPLACE WITH YOUR FIREBASE PROJECT CONFIG
-  const firebaseConfig = {
-    apiKey: "AIzaSyD-PLACEHOLDER-KEY",
-    authDomain: "shopkeeper-app.firebaseapp.com",
-    projectId: "shopkeeper-app",
-    storageBucket: "shopkeeper-app.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "1:123456789:web:abc123def456"
-  };
-  
-  // Initialize Firebase
-  let db;
-  let firestoreAvailable = false;
-  
-  try {
-    firebase.initializeApp(firebaseConfig);
-    db = firebase.firestore();
+  (function() {
+    // ==================== FIREBASE CONFIG ====================
+    // REPLACE WITH YOUR FIREBASE PROJECT CONFIG
+    const firebaseConfig = {
+      apiKey: "AIzaSyD-PLACEHOLDER-KEY",
+      authDomain: "shopkeeper-app.firebaseapp.com",
+      projectId: "shopkeeper-app",
+      storageBucket: "shopkeeper-app.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abc123def456"
+    };
     
-    db.enablePersistence({ synchronizeTabs: true })
-      .then(() => {
-        console.log('✅ Offline persistence enabled');
-        firestoreAvailable = true;
-        setupFirestoreSync();
-      })
-      .catch((err) => {
-        console.warn('Persistence limited:', err.code);
-        firestoreAvailable = true;
-        setupFirestoreSync();
-      });
-  } catch (error) {
-    console.warn('Firebase not configured. Using local storage.');
-    firestoreAvailable = false;
-    entries = loadFromLocalStorage();
-    renderProductCards();
-    updateStats();
-  }
-  
-  // ==================== APP STATE ====================
-  const STORAGE_KEY = 'shopkeeper_mobile_entries';
-  let entries = [];
-  let unsubscribeSnapshot = null;
-  let currentFilter = '';
-  
-  // ==================== SERVICE WORKER ====================
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      const swCode = `
-        const CACHE_NAME = 'shopkeeper-mobile-v1';
-        self.addEventListener('install', e => {
-          self.skipWaiting();
-          e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['/'])));
+    let db;
+    let firestoreAvailable = false;
+    
+    try {
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.firestore();
+      db.enablePersistence({ synchronizeTabs: true })
+        .then(() => {
+          console.log('✅ Offline enabled');
+          firestoreAvailable = true;
+          setupFirestoreSync();
+        })
+        .catch((err) => {
+          console.warn('Persistence:', err.code);
+          firestoreAvailable = true;
+          setupFirestoreSync();
         });
-        self.addEventListener('fetch', e => {
-          e.respondWith(
-            caches.match(e.request).then(r => r || fetch(e.request).then(res => {
-              if(res.status===200){
-                const clone=res.clone();
-                caches.open(CACHE_NAME).then(c=>c.put(e.request,clone));
-              }
-              return res;
-            }))
-          );
-        });
-        self.addEventListener('activate', e => {
-          e.waitUntil(caches.keys().then(keys => 
-            Promise.all(keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k)))
-          ));
-        });
-      `;
-      const blob = new Blob([swCode], { type: 'application/javascript' });
-      navigator.serviceWorker.register(URL.createObjectURL(blob))
-        .then(() => console.log('✅ SW registered'))
-        .catch(() => {});
-    });
-  }
-  
-  // ==================== ONLINE/OFFLINE ====================
-  function updateOnlineStatus() {
-    const dot = document.getElementById('statusDot');
-    if (navigator.onLine) {
-      dot.className = 'status-dot';
-    } else {
-      dot.className = 'status-dot offline';
+    } catch (e) {
+      console.warn('Using local storage only');
+      loadLocalAndRender();
     }
-  }
-  window.addEventListener('online', updateOnlineStatus);
-  window.addEventListener('offline', updateOnlineStatus);
-  setInterval(updateOnlineStatus, 5000);
-  
-  // ==================== FIRESTORE SYNC ====================
-  function setupFirestoreSync() {
-    if (!db) return;
     
-    const entriesRef = db.collection('shared').doc('inventory').collection('entries')
-      .orderBy('productName')
-      .orderBy('date', 'desc');
+    // ==================== STATE ====================
+    const STORAGE_KEY = 'shopkeeper_mobile_v2';
+    let entries = [];
+    let currentFilter = '';
     
-    entriesRef.get().then((snapshot) => {
-      const firestoreEntries = [];
-      snapshot.forEach((doc) => firestoreEntries.push({ id: doc.id, ...doc.data() }));
-      const localEntries = loadFromLocalStorage();
-      entries = firestoreEntries.length > 0 ? firestoreEntries : localEntries;
-      if (firestoreEntries.length > 0) saveToLocalStorage();
-      renderProductCards();
-      updateStats();
-    }).catch(() => {
+    // ==================== DOM REFS ====================
+    const productListContainer = document.getElementById('productListContainer');
+    const searchInput = document.getElementById('searchInput');
+    const entryModal = document.getElementById('entryModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const productNameInp = document.getElementById('productName');
+    const costPriceInp = document.getElementById('costPrice');
+    const salePriceInp = document.getElementById('salePrice');
+    const effectiveDateInp = document.getElementById('effectiveDate');
+    const supplierNameInp = document.getElementById('supplierName');
+    const supplierContactInp = document.getElementById('supplierContact');
+    const editingIdInp = document.getElementById('editingId');
+    const toast = document.getElementById('toast');
+    const statusDot = document.getElementById('statusDot');
+    
+    // ==================== HELPERS ====================
+    function getTodayDateString() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
+    
+    function formatDate(dateStr) {
+      if (!dateStr) return '—';
+      const [y, m, d] = dateStr.split('-');
+      return `${d}/${m}/${y}`;
+    }
+    
+    function escapeHtml(text) {
+      if (!text) return '—';
+      return String(text).replace(/[&<>"]/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'
+      }[m]));
+    }
+    
+    function generateId() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+    }
+    
+    function showToast(msg, type = 'success') {
+      toast.textContent = msg;
+      toast.className = `toast ${type} show`;
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(() => { toast.className = 'toast'; }, 2000);
+    }
+    
+    function updateOnlineStatus() {
+      statusDot.className = navigator.onLine ? 'status-dot' : 'status-dot offline';
+    }
+    
+    // ==================== LOCAL STORAGE ====================
+    function loadFromLocalStorage() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+      catch(e) { return []; }
+    }
+    
+    function saveToLocalStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    }
+    
+    function loadLocalAndRender() {
       entries = loadFromLocalStorage();
       renderProductCards();
       updateStats();
-    });
-    
-    unsubscribeSnapshot = entriesRef.onSnapshot((snapshot) => {
-      const firestoreEntries = [];
-      snapshot.forEach((doc) => firestoreEntries.push({ id: doc.id, ...doc.data() }));
-      entries = firestoreEntries;
-      saveToLocalStorage();
-      renderProductCards();
-      updateStats();
-      showSyncSpin();
-    }, () => {});
-  }
-  
-  function showSyncSpin() {
-    const spin = document.getElementById('syncSpin');
-    spin.classList.add('active');
-    setTimeout(() => spin.classList.remove('active'), 1500);
-  }
-  
-  async function saveToFirestore(entryData) {
-    if (!db || !navigator.onLine) return null;
-    try {
-      const ref = db.collection('shared').doc('inventory').collection('entries');
-      if (entryData.id) {
-        const { id, ...data } = entryData;
-        await ref.doc(id).set(data, { merge: true });
-        return id;
-      } else {
-        const docRef = await ref.add({
-          productName: entryData.productName,
-          cost: entryData.cost,
-          sale: entryData.sale,
-          date: entryData.date,
-          supplier: entryData.supplier || '',
-          contact: entryData.contact || '',
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        return docRef.id;
-      }
-    } catch (e) {
-      return null;
-    }
-  }
-  
-  async function deleteFromFirestore(id) {
-    if (!db) return;
-    try {
-      await db.collection('shared').doc('inventory').collection('entries').doc(id).delete();
-    } catch (e) {}
-  }
-  
-  // ==================== LOCAL STORAGE ====================
-  function loadFromLocalStorage() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-    catch(e) { return []; }
-  }
-  
-  function saveToLocalStorage() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-  }
-  
-  function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
-  }
-  
-  // ==================== UI RENDER ====================
-  function getTodayDateString() {
-    const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  }
-  
-  function formatDate(dateStr) {
-    if (!dateStr) return '—';
-    const [y, m, d] = dateStr.split('-');
-    return `${d}/${m}/${y}`;
-  }
-  
-  function escapeHtml(text) {
-    if (!text) return '—';
-    return String(text).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-  }
-  
-  function showToast(msg, type = 'success') {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.className = `toast ${type} show`;
-    setTimeout(() => { toast.className = 'toast'; }, 2500);
-  }
-  
-  function renderProductCards() {
-    const container = document.getElementById('productListContainer');
-    const filter = currentFilter.toLowerCase();
-    
-    let filtered = entries.filter(e => 
-      !filter || e.productName?.toLowerCase().includes(filter) ||
-      e.supplier?.toLowerCase().includes(filter) ||
-      e.contact?.toLowerCase().includes(filter)
-    );
-    
-    filtered.sort((a, b) => {
-      if (a.productName < b.productName) return -1;
-      if (a.productName > b.productName) return 1;
-      return new Date(b.date) - new Date(a.date);
-    });
-    
-    if (filtered.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <i class="fas fa-box-open"></i>
-          <p>${filter ? 'No matching entries' : 'No entries yet'}</p>
-          <p style="font-size:13px;color:#94a3b8;">Tap + to add your first product</p>
-        </div>`;
-      return;
     }
     
-    container.innerHTML = filtered.map(entry => {
-      const margin = entry.sale - entry.cost;
-      const marginPercent = entry.cost > 0 ? ((margin / entry.cost) * 100).toFixed(1) : 0;
-      const isPositive = margin >= 0;
+    // ==================== FIRESTORE ====================
+    function setupFirestoreSync() {
+      if (!db) { loadLocalAndRender(); return; }
       
-      return `
-        <div class="product-card" data-id="${entry.id}">
-          ${margin !== 0 ? `<div class="margin-badge ${isPositive ? '' : 'negative'}">${isPositive ? '+' : ''}${marginPercent}%</div>` : ''}
-          <div class="product-header">
-            <div class="product-name">${escapeHtml(entry.productName)}</div>
-            <div class="product-actions">
-              <i class="fas fa-edit" onclick="editEntry('${entry.id}')"></i>
-              <i class="fas fa-trash-alt" onclick="deleteEntry('${entry.id}')"></i>
-            </div>
-          </div>
-          <div class="price-row">
-            <div class="price-tag">
-              <div class="label">Cost</div>
-              <div class="value">₹${Number(entry.cost).toFixed(2)}</div>
-            </div>
-            <div class="price-tag">
-              <div class="label">Sale</div>
-              <div class="value sale">₹${Number(entry.sale).toFixed(2)}</div>
-            </div>
-          </div>
-          <div class="product-meta">
-            <span class="meta-badge badge-date">
-              <i class="far fa-calendar-alt"></i> ${formatDate(entry.date)}
-            </span>
-            ${entry.supplier ? `<span class="meta-badge badge-supplier"><i class="fas fa-user"></i> ${escapeHtml(entry.supplier)}</span>` : ''}
-            ${entry.contact ? `<span class="meta-badge badge-contact"><i class="fas fa-phone-alt"></i> ${escapeHtml(entry.contact)}</span>` : ''}
-          </div>
-        </div>`;
-    }).join('');
-  }
-  
-  function updateStats() {
-    const uniqueProducts = new Set(entries.map(e => e.productName).filter(Boolean)).size;
-    const uniqueSuppliers = new Set(entries.map(e => e.supplier).filter(Boolean)).size;
-    document.getElementById('totalProducts').textContent = uniqueProducts;
-    document.getElementById('totalSuppliers').textContent = uniqueSuppliers;
-    document.getElementById('totalEntries').textContent = entries.length;
-  }
-  
-  // ==================== MODAL HANDLING ====================
-  function openModal(title = 'Add New Entry') {
-    document.getElementById('modalTitle').textContent = title;
-    document.getElementById('entryModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-  
-  function closeModal() {
-    document.getElementById('entryModal').classList.remove('active');
-    document.body.style.overflow = '';
-    clearForm();
-  }
-  
-  function clearForm() {
-    document.getElementById('productName').value = '';
-    document.getElementById('costPrice').value = '';
-    document.getElementById('salePrice').value = '';
-    document.getElementById('effectiveDate').value = getTodayDateString();
-    document.getElementById('supplierName').value = '';
-    document.getElementById('supplierContact').value = '';
-    document.getElementById('editingId').value = '';
-  }
-  
-  function editEntry(id) {
-    const entry = entries.find(e => e.id === id);
-    if (!entry) return;
-    
-    document.getElementById('productName').value = entry.productName || '';
-    document.getElementById('costPrice').value = entry.cost || '';
-    document.getElementById('salePrice').value = entry.sale || '';
-    document.getElementById('effectiveDate').value = entry.date || getTodayDateString();
-    document.getElementById('supplierName').value = entry.supplier || '';
-    document.getElementById('supplierContact').value = entry.contact || '';
-    document.getElementById('editingId').value = entry.id;
-    
-    openModal('Edit Entry');
-  }
-  
-  async function deleteEntry(id) {
-    if (!confirm('Delete this entry?')) return;
-    
-    entries = entries.filter(e => e.id !== id);
-    saveToLocalStorage();
-    await deleteFromFirestore(id);
-    
-    if (document.getElementById('editingId').value === id) closeModal();
-    
-    renderProductCards();
-    updateStats();
-    showToast('Entry deleted', 'error');
-  }
-  
-  async function saveEntry() {
-    const productName = document.getElementById('productName').value.trim();
-    const cost = parseFloat(document.getElementById('costPrice').value);
-    const sale = parseFloat(document.getElementById('salePrice').value);
-    const date = document.getElementById('effectiveDate').value;
-    const supplier = document.getElementById('supplierName').value.trim();
-    const contact = document.getElementById('supplierContact').value.trim();
-    const editingId = document.getElementById('editingId').value;
-    
-    if (!productName) { showToast('Enter product name', 'error'); return; }
-    if (isNaN(cost) || cost < 0) { showToast('Valid cost required', 'error'); return; }
-    if (isNaN(sale) || sale < 0) { showToast('Valid sale price required', 'error'); return; }
-    if (!date) { showToast('Select a date', 'error'); return; }
-    
-    if (editingId) {
-      const idx = entries.findIndex(e => e.id === editingId);
-      if (idx !== -1) {
-        entries[idx] = { ...entries[idx], productName, cost, sale, date, supplier, contact };
-        await saveToFirestore({ id: editingId, ...entries[idx] });
-      }
-    } else {
-      const newEntry = { id: generateId(), productName, cost, sale, date, supplier, contact };
-      entries.push(newEntry);
-      const fireId = await saveToFirestore(newEntry);
-      if (fireId) newEntry.id = fireId;
+      const ref = db.collection('shared').doc('inventory').collection('entries')
+        .orderBy('productName').orderBy('date', 'desc');
+      
+      ref.get().then(snap => {
+        const fireEntries = [];
+        snap.forEach(doc => fireEntries.push({ id: doc.id, ...doc.data() }));
+        entries = fireEntries.length > 0 ? fireEntries : loadFromLocalStorage();
+        if (fireEntries.length > 0) saveToLocalStorage();
+        renderProductCards();
+        updateStats();
+      }).catch(() => loadLocalAndRender());
+      
+      ref.onSnapshot(snap => {
+        const fireEntries = [];
+        snap.forEach(doc => fireEntries.push({ id: doc.id, ...doc.data() }));
+        entries = fireEntries;
+        saveToLocalStorage();
+        renderProductCards();
+        updateStats();
+      }, () => {});
     }
     
-    saveToLocalStorage();
-    renderProductCards();
-    updateStats();
-    closeModal();
-    showToast(editingId ? 'Entry updated!' : 'Entry added!');
-  }
-  
-  async function resetAllData() {
-    if (!confirm('Delete ALL entries?')) return;
-    if (!confirm('This cannot be undone!')) return;
-    
-    entries = [];
-    saveToLocalStorage();
-    
-    if (db) {
+    async function saveToFirestore(entryData) {
+      if (!db || !navigator.onLine) return null;
       try {
-        const snap = await db.collection('shared').doc('inventory').collection('entries').get();
-        const batch = db.batch();
-        snap.forEach(doc => batch.delete(doc.ref));
-        await batch.commit();
+        const ref = db.collection('shared').doc('inventory').collection('entries');
+        if (entryData.id) {
+          const { id, ...data } = entryData;
+          await ref.doc(id).set(data, { merge: true });
+          return id;
+        } else {
+          const docRef = await ref.add({
+            productName: entryData.productName,
+            cost: entryData.cost,
+            sale: entryData.sale,
+            date: entryData.date,
+            supplier: entryData.supplier || '',
+            contact: entryData.contact || '',
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          return docRef.id;
+        }
+      } catch(e) { return null; }
+    }
+    
+    async function deleteFromFirestore(id) {
+      if (!db) return;
+      try {
+        await db.collection('shared').doc('inventory').collection('entries').doc(id).delete();
       } catch(e) {}
     }
     
-    renderProductCards();
-    updateStats();
-    showToast('All data cleared', 'error');
-  }
-  
-  // ==================== EVENT LISTENERS ====================
-  document.getElementById('fabAddBtn').addEventListener('click', () => {
-    clearForm();
-    openModal();
-  });
-  
-  document.getElementById('openAddModal').addEventListener('click', () => {
-    clearForm();
-    openModal();
-  });
-  
-  document.getElementById('resetBtn').addEventListener('click', resetAllData);
-  document.getElementById('cancelModalBtn').addEventListener('click', closeModal);
-  
-  document.getElementById('entryModal').addEventListener('click', (e) => {
-    if (e.target === e.currentTarget) closeModal();
-  });
-  
-  document.getElementById('saveEntryBtn').addEventListener('click', saveEntry);
-  
-  // Search
-  const searchInput = document.getElementById('searchInput');
-  const clearSearchBtn = document.getElementById('clearSearchBtn');
-  
-  searchInput.addEventListener('input', () => {
-    currentFilter = searchInput.value;
-    clearSearchBtn.style.display = currentFilter ? 'block' : 'none';
-    renderProductCards();
-  });
-  
-  clearSearchBtn.addEventListener('click', () => {
-    searchInput.value = '';
-    currentFilter = '';
-    clearSearchBtn.style.display = 'none';
-    renderProductCards();
-    searchInput.focus();
-  });
-  
-  // Swipe down to close modal
-  let touchStartY = 0;
-  document.querySelector('.bottom-sheet').addEventListener('touchstart', (e) => {
-    touchStartY = e.touches[0].clientY;
-  });
-  
-  document.querySelector('.bottom-sheet').addEventListener('touchmove', (e) => {
-    const touchY = e.touches[0].clientY;
-    if (touchY - touchStartY > 80 && document.querySelector('.bottom-sheet').scrollTop <= 0) {
-      closeModal();
+    // ==================== RENDER ====================
+    function renderProductCards() {
+      const filter = currentFilter.toLowerCase();
+      let filtered = entries.filter(e => 
+        !filter || 
+        (e.productName||'').toLowerCase().includes(filter) ||
+        (e.supplier||'').toLowerCase().includes(filter) ||
+        (e.contact||'').toLowerCase().includes(filter)
+      );
+      
+      filtered.sort((a, b) => {
+        if ((a.productName||'') < (b.productName||'')) return -1;
+        if ((a.productName||'') > (b.productName||'')) return 1;
+        return new Date(b.date||0) - new Date(a.date||0);
+      });
+      
+      if (filtered.length === 0) {
+        productListContainer.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <p>${filter ? 'No matching entries' : 'No entries yet'}</p>
+            <p style="font-size:12px;color:#94a3b8;">Tap + to add product</p>
+          </div>`;
+        return;
+      }
+      
+      productListContainer.innerHTML = filtered.map(entry => {
+        const margin = (entry.sale||0) - (entry.cost||0);
+        const marginPercent = (entry.cost||0) > 0 ? ((margin / entry.cost) * 100).toFixed(1) : 0;
+        const isPositive = margin >= 0;
+        const escapedId = escapeHtml(entry.id);
+        
+        return `
+          <div class="product-card">
+            ${margin !== 0 ? `<div class="margin-badge ${isPositive ? '' : 'negative'}">${isPositive ? '+' : ''}${marginPercent}%</div>` : ''}
+            <div class="product-header">
+              <div class="product-name">${escapeHtml(entry.productName)}</div>
+              <div class="product-actions">
+                <button class="btn-edit" data-edit-id="${escapedId}">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn-delete" data-delete-id="${escapedId}">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </div>
+            <div class="price-row">
+              <div class="price-tag">
+                <div class="label">Cost</div>
+                <div class="value">₹${Number(entry.cost||0).toFixed(2)}</div>
+              </div>
+              <div class="price-tag">
+                <div class="label">Sale</div>
+                <div class="value sale">₹${Number(entry.sale||0).toFixed(2)}</div>
+              </div>
+            </div>
+            <div class="product-meta">
+              <span class="meta-badge badge-date">
+                <i class="far fa-calendar-alt"></i> ${formatDate(entry.date)}
+              </span>
+              ${entry.supplier ? `<span class="meta-badge badge-supplier"><i class="fas fa-user"></i> ${escapeHtml(entry.supplier)}</span>` : ''}
+              ${entry.contact ? `<span class="meta-badge badge-contact"><i class="fas fa-phone-alt"></i> ${escapeHtml(entry.contact)}</span>` : ''}
+            </div>
+          </div>`;
+      }).join('');
+      
+      // Attach event listeners to all edit/delete buttons
+      document.querySelectorAll('[data-edit-id]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const id = this.getAttribute('data-edit-id');
+          handleEditEntry(id);
+        });
+      });
+      
+      document.querySelectorAll('[data-delete-id]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const id = this.getAttribute('data-delete-id');
+          handleDeleteEntry(id);
+        });
+      });
     }
-  });
-  
-  // Make functions globally accessible for onclick handlers
-  window.editEntry = editEntry;
-  window.deleteEntry = deleteEntry;
-  
-  // ==================== INIT ====================
-  function init() {
-    document.getElementById('effectiveDate').value = getTodayDateString();
-    entries = loadFromLocalStorage();
-    renderProductCards();
-    updateStats();
-    updateOnlineStatus();
     
-    console.log('📱 ShopKeeper Pro Mobile Ready');
-    console.log('💡 Tip: Add to Home Screen for app-like experience');
-  }
-  
-  init();
+    function updateStats() {
+      document.getElementById('totalProducts').textContent = 
+        new Set(entries.map(e => e.productName).filter(Boolean)).size;
+      document.getElementById('totalSuppliers').textContent = 
+        new Set(entries.map(e => e.supplier).filter(Boolean)).size;
+      document.getElementById('totalEntries').textContent = entries.length;
+    }
+    
+    // ==================== MODAL ====================
+    function openModal(title = 'Add New Entry') {
+      modalTitle.textContent = title;
+      entryModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        if (productNameInp) productNameInp.focus();
+      }, 300);
+    }
+    
+    function closeModal() {
+      entryModal.classList.remove('active');
+      document.body.style.overflow = '';
+      clearForm();
+    }
+    
+    function clearForm() {
+      if (productNameInp) productNameInp.value = '';
+      if (costPriceInp) costPriceInp.value = '';
+      if (salePriceInp) salePriceInp.value = '';
+      if (effectiveDateInp) effectiveDateInp.value = getTodayDateString();
+      if (supplierNameInp) supplierNameInp.value = '';
+      if (supplierContactInp) supplierContactInp.value = '';
+      if (editingIdInp) editingIdInp.value = '';
+    }
+    
+    function handleEditEntry(id) {
+      const entry = entries.find(e => e.id === id);
+      if (!entry) return;
+      
+      if (productNameInp) productNameInp.value = entry.productName || '';
+      if (costPriceInp) costPriceInp.value = entry.cost || '';
+      if (salePriceInp) salePriceInp.value = entry.sale || '';
+      if (effectiveDateInp) effectiveDateInp.value = entry.date || getTodayDateString();
+      if (supplierNameInp) supplierNameInp.value = entry.supplier || '';
+      if (supplierContactInp) supplierContactInp.value = entry.contact || '';
+      if (editingIdInp) editingIdInp.value = entry.id;
+      
+      openModal('Edit Entry');
+    }
+    
+    async function handleDeleteEntry(id) {
+      if (!confirm('Delete this entry?')) return;
+      
+      entries = entries.filter(e => e.id !== id);
+      saveToLocalStorage();
+      await deleteFromFirestore(id);
+      
+      if (editingIdInp && editingIdInp.value === id) closeModal();
+      
+      renderProductCards();
+      updateStats();
+      showToast('Entry deleted', 'error');
+    }
+    
+    async function handleSaveEntry() {
+      const productName = productNameInp.value.trim();
+      const cost = parseFloat(costPriceInp.value);
+      const sale = parseFloat(salePriceInp.value);
+      const date = effectiveDateInp.value;
+      const supplier = supplierNameInp.value.trim();
+      const contact = supplierContactInp.value.trim();
+      const editingId = editingIdInp.value;
+      
+      if (!productName) { showToast('Enter product name', 'error'); return; }
+      if (isNaN(cost) || cost < 0) { showToast('Valid cost required', 'error'); return; }
+      if (isNaN(sale) || sale < 0) { showToast('Valid sale price required', 'error'); return; }
+      if (!date) { showToast('Select a date', 'error'); return; }
+      
+      if (editingId) {
+        const idx = entries.findIndex(e => e.id === editingId);
+        if (idx !== -1) {
+          entries[idx] = { ...entries[idx], productName, cost, sale, date, supplier, contact };
+          await saveToFirestore({ id: editingId, ...entries[idx] });
+        }
+      } else {
+        const newEntry = { id: generateId(), productName, cost, sale, date, supplier, contact };
+        entries.push(newEntry);
+        const fireId = await saveToFirestore(newEntry);
+        if (fireId) newEntry.id = fireId;
+      }
+      
+      saveToLocalStorage();
+      renderProductCards();
+      updateStats();
+      closeModal();
+      showToast(editingId ? 'Entry updated!' : 'Entry added!');
+    }
+    
+    async function handleResetAll() {
+      if (!confirm('Delete ALL entries?')) return;
+      if (!confirm('This cannot be undone!')) return;
+      
+      entries = [];
+      saveToLocalStorage();
+      
+      if (db) {
+        try {
+          const snap = await db.collection('shared').doc('inventory').collection('entries').get();
+          const batch = db.batch();
+          snap.forEach(doc => batch.delete(doc.ref));
+          await batch.commit();
+        } catch(e) {}
+      }
+      
+      renderProductCards();
+      updateStats();
+      showToast('All data cleared', 'error');
+    }
+    
+    // ==================== EVENT BINDING ====================
+    function bindEvents() {
+      // FAB button
+      const fabBtn = document.getElementById('fabAddBtn');
+      if (fabBtn) {
+        fabBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          clearForm();
+          openModal('Add New Entry');
+        });
+      }
+      
+      // Open modal button
+      const openBtn = document.getElementById('openAddModalBtn');
+      if (openBtn) {
+        openBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          clearForm();
+          openModal('Add New Entry');
+        });
+      }
+      
+      // Reset button
+      const resetBtn = document.getElementById('resetBtn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          handleResetAll();
+        });
+      }
+      
+      // Save button in modal
+      const saveBtn = document.getElementById('saveEntryBtn');
+      if (saveBtn) {
+        saveBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          handleSaveEntry();
+        });
+      }
+      
+      // Cancel button in modal
+      const cancelBtn = document.getElementById('cancelModalBtn');
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          closeModal();
+        });
+      }
+      
+      // Close modal on overlay click
+      if (entryModal) {
+        entryModal.addEventListener('click', function(e) {
+          if (e.target === entryModal) {
+            closeModal();
+          }
+        });
+      }
+      
+      // Search input
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          currentFilter = this.value;
+          renderProductCards();
+        });
+      }
+      
+      // Swipe down on bottom sheet to close
+      const bottomSheet = document.getElementById('bottomSheet');
+      if (bottomSheet) {
+        let startY = 0;
+        bottomSheet.addEventListener('touchstart', function(e) {
+          startY = e.touches[0].clientY;
+        }, { passive: true });
+        
+        bottomSheet.addEventListener('touchmove', function(e) {
+          const currentY = e.touches[0].clientY;
+          if (currentY - startY > 60 && bottomSheet.scrollTop <= 5) {
+            closeModal();
+          }
+        }, { passive: true });
+      }
+      
+      // Online/Offline detection
+      window.addEventListener('online', updateOnlineStatus);
+      window.addEventListener('offline', updateOnlineStatus);
+    }
+    
+    // ==================== INIT ====================
+    function init() {
+      if (effectiveDateInp) effectiveDateInp.value = getTodayDateString();
+      
+      if (!firebaseAvailable) {
+        loadLocalAndRender();
+      }
+      
+      bindEvents();
+      updateOnlineStatus();
+      updateStats();
+      
+      console.log('📱 ShopKeeper Mobile Ready');
+      console.log('✅ All buttons functional');
+    }
+    
+    // Start app
+    init();
+    
+  })();
 </script>
 
 </body>
