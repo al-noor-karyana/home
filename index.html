@@ -193,24 +193,15 @@ body{background:#1a1a2e;font-family:Arial,sans-serif;display:flex;justify-conten
 
 <div class="toast" id="toast"></div>
 
-<!-- Firebase SDK -->
+<!-- Firebase Compat SDK (v8 style) - ONLY USE ONE VERSION -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js">
 </script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js">
 </script>
 
 <script>
-// ==================== FIREBASE CONFIG ====================
-// REPLACE THESE VALUES WITH YOUR FIREBASE PROJECT CONFIG
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+// ==================== FIREBASE CONFIG - USING YOUR CREDENTIALS ====================
+var firebaseConfig = {
   apiKey: "AIzaSyDIfpVbV3K7G7aMQSKI09dcxS1uf1IGf74",
   authDomain: "al-noor-karyana-28699.firebaseapp.com",
   projectId: "al-noor-karyana-28699",
@@ -220,11 +211,7 @@ const firebaseConfig = {
   measurementId: "G-1RSTMHM6FV"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-// Initialize Firebase
+// Initialize Firebase - ONLY ONCE
 firebase.initializeApp(firebaseConfig);
 var db = firebase.firestore();
 
@@ -234,11 +221,7 @@ db.enablePersistence({ synchronizeTabs: true })
     console.log('Firebase offline persistence enabled');
   })
   .catch(function(err) {
-    if (err.code === 'failed-precondition') {
-      console.log('Multiple tabs open, persistence limited');
-    } else if (err.code === 'unimplemented') {
-      console.log('Browser does not support persistence');
-    }
+    console.log('Persistence setting:', err.code);
   });
 
 // ==================== APP LOGIC ====================
@@ -359,13 +342,13 @@ db.enablePersistence({ synchronizeTabs: true })
   function updateSyncStatus(online) {
     if (online) {
       syncDot.className = 'dot';
-      syncText.textContent = 'Firebase Online';
-      syncStatus.textContent = 'Data syncing to cloud';
+      syncText.textContent = 'Online';
+      syncStatus.textContent = 'Synced with Firebase';
       syncStatus.style.color = '#4caf50';
     } else {
       syncDot.className = 'dot off';
       syncText.textContent = 'Offline';
-      syncStatus.textContent = 'Changes saved locally - will sync when online';
+      syncStatus.textContent = 'Will sync when online';
       syncStatus.style.color = '#f44336';
     }
   }
@@ -393,14 +376,10 @@ db.enablePersistence({ synchronizeTabs: true })
         entries = fireEntries;
         updateSyncStatus(true);
         render();
-        g('syncStatus').textContent = 'Synced with Firebase • ' + entries.length + ' entries';
-        g('syncStatus').style.color = '#4caf50';
       },
       function(error) {
-        console.log('Firestore listener error (might be offline):', error);
+        console.log('Listener error:', error.message);
         updateSyncStatus(false);
-        g('syncStatus').textContent = 'Offline mode - using cached data';
-        g('syncStatus').style.color = '#f44336';
       }
     );
   }
@@ -416,10 +395,7 @@ db.enablePersistence({ synchronizeTabs: true })
       contact: entry.contact || '',
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
-
-    return ref.add(data).then(function(docRef) {
-      return docRef.id;
-    });
+    return ref.add(data);
   }
 
   function updateInFirebase(id, entry) {
@@ -437,8 +413,7 @@ db.enablePersistence({ synchronizeTabs: true })
   }
 
   function deleteFromFirebase(id) {
-    var ref = getEntriesRef().doc(id);
-    return ref.delete();
+    return getEntriesRef().doc(id).delete();
   }
 
   function clearAllFirebase() {
@@ -466,7 +441,6 @@ db.enablePersistence({ synchronizeTabs: true })
       }
     }
 
-    // Sort
     filtered.sort(function(a, b) {
       var na = (a.productName || '').toLowerCase();
       var nb = (b.productName || '').toLowerCase();
@@ -479,8 +453,8 @@ db.enablePersistence({ synchronizeTabs: true })
 
     if (filtered.length === 0) {
       productList.innerHTML = '<div class="empty"><span class="empty-icon">&#128232;</span><div class="empty-title">' +
-        (filter ? 'No matching entries' : 'No entries yet') +
-        '</div><div class="empty-text">Tap + to add product to Firebase</div></div>';
+        (filter ? 'No matches' : 'No entries') +
+        '</div><div class="empty-text">Tap + to add to Firebase</div></div>';
     } else {
       var html = '';
       for (var j = 0; j < filtered.length; j++) {
@@ -497,22 +471,22 @@ db.enablePersistence({ synchronizeTabs: true })
         html += '<div class="card-top">';
         html += '<div class="card-name">' + esc(entry.productName) + '</div>';
         html += '<div class="card-btns">';
-        html += '<button class="cbtn cbtn-edit" data-eid="' + entry.id + '">&#9998;</button>';
-        html += '<button class="cbtn cbtn-del" data-did="' + entry.id + '">&#128465;</button>';
+        html += '<button class="cbtn cbtn-edit" data-eid="' + entry.id + '">✏</button>';
+        html += '<button class="cbtn cbtn-del" data-did="' + entry.id + '">🗑</button>';
         html += '</div></div>';
         html += '<div class="prices">';
         html += '<div class="price-box"><div class="price-lbl">COST</div><div class="price-val">₹' + Number(entry.cost || 0).toFixed(2) + '</div></div>';
         html += '<div class="price-box"><div class="price-lbl">SALE</div><div class="price-val sale">₹' + Number(entry.sale || 0).toFixed(2) + '</div></div>';
         html += '</div>';
         html += '<div class="meta-row">';
-        html += '<span class="meta-tag tag-date">&#128197; ' + formatDate(entry.date) + '</span>';
-        if (entry.supplier) html += '<span class="meta-tag tag-sup">&#128666; ' + esc(entry.supplier) + '</span>';
-        if (entry.contact) html += '<span class="meta-tag tag-con">&#128222; ' + esc(entry.contact) + '</span>';
+        html += '<span class="meta-tag tag-date">📅 ' + formatDate(entry.date) + '</span>';
+        if (entry.supplier) html += '<span class="meta-tag tag-sup">🚚 ' + esc(entry.supplier) + '</span>';
+        if (entry.contact) html += '<span class="meta-tag tag-con">📞 ' + esc(entry.contact) + '</span>';
         html += '</div></div>';
       }
       productList.innerHTML = html;
 
-      // Bind edit buttons
+      // Bind buttons
       var editBtns = productList.querySelectorAll('[data-eid]');
       for (var k = 0; k < editBtns.length; k++) {
         (function(id) {
@@ -524,7 +498,6 @@ db.enablePersistence({ synchronizeTabs: true })
         })(editBtns[k].getAttribute('data-eid'));
       }
 
-      // Bind delete buttons
       var delBtns = productList.querySelectorAll('[data-did]');
       for (var m = 0; m < delBtns.length; m++) {
         (function(id) {
@@ -537,7 +510,6 @@ db.enablePersistence({ synchronizeTabs: true })
       }
     }
 
-    // Stats
     var up = {};
     var us = {};
     for (var n = 0; n < entries.length; n++) {
@@ -561,7 +533,7 @@ db.enablePersistence({ synchronizeTabs: true })
         fSupplier.value = e.supplier || '';
         fContact.value = e.contact || '';
         fEditId.value = e.id;
-        openModal('Edit Entry (Firebase)');
+        openModal('Edit Entry');
         return;
       }
     }
@@ -574,10 +546,10 @@ db.enablePersistence({ synchronizeTabs: true })
     }
     if (!entry) return;
 
-    showAlert('Delete from Firebase', 'Delete "' + entry.productName + '"? This removes from cloud.', '🗑', function() {
+    showAlert('Delete', 'Delete "' + entry.productName + '"?', '🗑', function() {
       deleteFromFirebase(id).then(function() {
         if (fEditId.value === id) closeModal();
-        showToast('Deleted from Firebase!', 'err');
+        showToast('Deleted!', 'err');
       }).catch(function(err) {
         showToast('Error: ' + err.message, 'err');
       });
@@ -593,10 +565,10 @@ db.enablePersistence({ synchronizeTabs: true })
     var con = fContact.value.trim();
     var eid = fEditId.value;
 
-    if (!pn) { showToast('Enter product name', 'warn'); fProductName.focus(); return; }
-    if (isNaN(cost) || cost < 0) { showToast('Valid cost needed', 'warn'); fCostPrice.focus(); return; }
-    if (isNaN(sale) || sale < 0) { showToast('Valid sale needed', 'warn'); fSalePrice.focus(); return; }
-    if (!date) { showToast('Select date', 'warn'); fDate.focus(); return; }
+    if (!pn) { showToast('Enter product name', 'warn'); return; }
+    if (isNaN(cost) || cost < 0) { showToast('Valid cost needed', 'warn'); return; }
+    if (isNaN(sale) || sale < 0) { showToast('Valid sale needed', 'warn'); return; }
+    if (!date) { showToast('Select date', 'warn'); return; }
 
     var entryData = {
       productName: pn,
@@ -608,16 +580,14 @@ db.enablePersistence({ synchronizeTabs: true })
     };
 
     if (eid) {
-      // Update existing
       updateInFirebase(eid, entryData).then(function() {
         closeModal();
-        showToast('Updated in Firebase!', 'ok');
+        showToast('Updated!', 'ok');
       }).catch(function(err) {
         showToast('Error: ' + err.message, 'err');
       });
     } else {
-      // Add new
-      addToFirebase(entryData).then(function(docId) {
+      addToFirebase(entryData).then(function() {
         closeModal();
         showToast('Saved to Firebase!', 'ok');
       }).catch(function(err) {
@@ -627,9 +597,9 @@ db.enablePersistence({ synchronizeTabs: true })
   }
 
   function handleReset() {
-    showAlert('Clear Firebase', 'Delete ALL entries from cloud? This cannot be undone!', '⚠', function() {
+    showAlert('Clear All', 'Delete ALL from cloud?', '⚠', function() {
       clearAllFirebase().then(function() {
-        showToast('All data cleared from Firebase!', 'err');
+        showToast('All cleared!', 'err');
       }).catch(function(err) {
         showToast('Error: ' + err.message, 'err');
       });
@@ -638,24 +608,22 @@ db.enablePersistence({ synchronizeTabs: true })
 
   function handleExport() {
     if (entries.length === 0) { showToast('Nothing to export', 'warn'); return; }
-
     var csv = 'Product,Cost,Sale,Margin,Date,Supplier,Contact\n';
     for (var i = 0; i < entries.length; i++) {
       var e = entries[i];
       var margin = ((e.sale || 0) - (e.cost || 0)).toFixed(2);
       csv += '"' + (e.productName || '') + '","' + (e.cost || 0) + '","' + (e.sale || 0) + '","' + margin + '","' + (e.date || '') + '","' + (e.supplier || '') + '","' + (e.contact || '') + '"\n';
     }
-
     var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
-    a.download = 'firebase-export-' + today() + '.csv';
+    a.download = 'export-' + today() + '.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    showToast('Exported from Firebase!', 'ok');
+    showToast('Exported!', 'ok');
   }
 
   // ========== EVENT BINDING ==========
@@ -680,47 +648,30 @@ db.enablePersistence({ synchronizeTabs: true })
     searchInput.value = '';
     currentFilter = '';
     clearSearch.style.display = 'none';
-    searchInput.focus();
     render();
   };
 
   // Touch swipe
   var touchY = 0;
-  if (sheet) {
-    sheet.addEventListener('touchstart', function(e) { touchY = e.touches[0].clientY; }, false);
-    sheet.addEventListener('touchmove', function(e) {
-      if (e.touches[0].clientY - touchY > 50 && sheet.scrollTop <= 5) closeModal();
-    }, false);
-  }
+  sheet.addEventListener('touchstart', function(e) { touchY = e.touches[0].clientY; }, false);
+  sheet.addEventListener('touchmove', function(e) {
+    if (e.touches[0].clientY - touchY > 50 && sheet.scrollTop <= 5) closeModal();
+  }, false);
 
-  // Online/offline detection
   window.addEventListener('online', function() {
     updateSyncStatus(true);
-    g('syncStatus').textContent = 'Back online - syncing...';
-    g('syncStatus').style.color = '#ff9800';
     setupRealtimeListener();
   });
-  window.addEventListener('offline', function() {
-    updateSyncStatus(false);
-    g('syncStatus').textContent = 'Offline - data cached locally';
-    g('syncStatus').style.color = '#f44336';
-  });
+  window.addEventListener('offline', function() { updateSyncStatus(false); });
 
-  // Initial online check
-  if (navigator.onLine) {
-    updateSyncStatus(true);
-  } else {
-    updateSyncStatus(false);
-  }
+  if (navigator.onLine) updateSyncStatus(true);
+  else updateSyncStatus(false);
 
   // ========== INIT ==========
-  function init() {
-    fDate.value = today();
-    setupRealtimeListener();
-  }
-
-  init();
+  g('fDate').value = today();
+  setupRealtimeListener();
 })();
 </script>
+
 </body>
 </html>
