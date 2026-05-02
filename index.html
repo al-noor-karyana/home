@@ -1,778 +1,726 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <meta name="theme-color" content="#0f172a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="mobile-web-app-capable" content="yes">
-  
-  <title>ShopKeeper Pro</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-    
-    input, textarea { -webkit-user-select: text; user-select: text; }
-    
-    body {
-      background: #0f172a;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      padding: 0;
-      margin: 0;
-    }
-    
-    .app-container {
-      width: 100%;
-      min-height: 100vh;
-      background: #f1f5f9;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    
-    /* Header */
-    .mobile-header {
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: white;
-      padding: 12px 14px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 15px rgba(0,0,0,0.3);
-    }
-    
-    .header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-    
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 17px;
-      font-weight: 700;
-    }
-    .logo i { color: #fbbf24; font-size: 20px; }
-    
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #16a34a;
-    }
-    .status-dot.offline { background: #ef4444; }
-    
-    .search-input-wrapper {
-      display: flex;
-      align-items: center;
-      background: rgba(255,255,255,0.12);
-      border-radius: 18px;
-      padding: 2px 2px 2px 10px;
-      border: 1px solid rgba(255,255,255,0.15);
-    }
-    .search-input-wrapper i { color: rgba(255,255,255,0.6); font-size: 13px; }
-    .search-input-wrapper input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: white;
-      padding: 7px 5px;
-      font-size: 13px;
-      outline: none;
-      width: 100%;
-    }
-    .search-input-wrapper input::placeholder {
-      color: rgba(255,255,255,0.4);
-      font-size: 12px;
-    }
-    
-    /* Content */
-    .mobile-content {
-      flex: 1;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 80px;
-    }
-    
-    .stats-row {
-      display: flex;
-      gap: 5px;
-      padding: 8px 10px;
-    }
-    .stat-card {
-      background: white;
-      border-radius: 10px;
-      padding: 6px 8px;
-      flex: 1;
-      text-align: center;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-    .stat-card i { font-size: 14px; color: #2563eb; display: block; margin-bottom: 2px; }
-    .stat-card .stat-value { font-size: 16px; font-weight: 700; color: #0f172a; }
-    .stat-card .stat-label { font-size: 9px; color: #64748b; text-transform: uppercase; }
-    
-    .quick-actions {
-      display: flex;
-      gap: 5px;
-      padding: 4px 10px 6px;
-    }
-    .btn-action {
-      flex: 1;
-      padding: 8px;
-      border-radius: 10px;
-      border: none;
-      font-weight: 600;
-      font-size: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      touch-action: manipulation;
-    }
-    .btn-add { background: #2563eb; color: white; }
-    .btn-add:active { background: #1d4ed8; transform: scale(0.97); }
-    .btn-reset { background: white; color: #ef4444; border: 1px solid #fecaca; }
-    .btn-reset:active { background: #fef2f2; }
-    
-    /* Product Cards */
-    .product-list { padding: 0 10px; }
-    .section-title {
-      font-size: 11px;
-      font-weight: 600;
-      color: #64748b;
-      text-transform: uppercase;
-      margin-bottom: 5px;
-      padding-left: 3px;
-    }
-    
-    .product-card {
-      background: white;
-      border-radius: 10px;
-      padding: 10px;
-      margin-bottom: 5px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-      border-left: 3px solid #2563eb;
-      position: relative;
-    }
-    
-    .product-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 5px;
-    }
-    .product-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: #0f172a;
-      flex: 1;
-      padding-right: 5px;
-    }
-    .product-actions {
-      display: flex;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-    .product-actions button {
-      background: none;
-      border: none;
-      font-size: 14px;
-      padding: 3px 5px;
-      border-radius: 5px;
-      cursor: pointer;
-      touch-action: manipulation;
-      min-width: 26px;
-      min-height: 26px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .btn-edit { color: #2563eb; background: #eff6ff !important; }
-    .btn-delete { color: #ef4444; background: #fef2f2 !important; }
-    .product-actions button:active { transform: scale(0.92); }
-    
-    .price-row {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 5px;
-    }
-    .price-tag {
-      flex: 1;
-      background: #f8fafc;
-      padding: 5px 8px;
-      border-radius: 6px;
-    }
-    .price-tag .label { font-size: 9px; color: #64748b; }
-    .price-tag .value { font-size: 14px; font-weight: 700; color: #0f172a; }
-    .price-tag .value.sale { color: #16a34a; }
-    
-    .meta-row { display: flex; gap: 3px; flex-wrap: wrap; }
-    .meta-badge {
-      font-size: 9px;
-      padding: 2px 6px;
-      border-radius: 8px;
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 2px;
-    }
-    .badge-date { background: #fef3c7; color: #92400e; }
-    .badge-supplier { background: #e0e7ff; color: #3730a3; }
-    .badge-contact { background: #f1f5f9; color: #64748b; }
-    
-    .margin-badge {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 5px;
-      border-radius: 5px;
-      background: #dcfce7;
-      color: #16a34a;
-    }
-    .margin-badge.negative { background: #fee2e2; color: #dc2626; }
-    
-    .empty-state {
-      text-align: center;
-      padding: 25px 15px;
-      color: #94a3b8;
-    }
-    .empty-state i { font-size: 35px; margin-bottom: 6px; display: block; }
-    .empty-state p { font-size: 13px; }
-    
-    /* FAB */
-    .fab {
-      position: fixed;
-      bottom: 18px;
-      right: 18px;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #2563eb;
-      color: white;
-      border: none;
-      box-shadow: 0 5px 18px rgba(37,99,235,0.5);
-      font-size: 20px;
-      cursor: pointer;
-      z-index: 99;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      touch-action: manipulation;
-    }
-    .fab:active { transform: scale(0.9); }
-    
-    /* Modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.65);
-      z-index: 200;
-      display: none;
-      justify-content: center;
-      align-items: flex-end;
-    }
-    .modal-overlay.active { display: flex; }
-    
-    .bottom-sheet {
-      background: white;
-      width: 100%;
-      max-height: 75vh;
-      border-radius: 18px 18px 0 0;
-      padding: 14px 12px 20px;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      animation: slideUp 0.25s ease;
-    }
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-    
-    .sheet-handle {
-      width: 32px;
-      height: 3px;
-      background: #cbd5e1;
-      border-radius: 2px;
-      margin: 0 auto 10px;
-    }
-    .sheet-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #0f172a;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-    
-    .form-group { margin-bottom: 8px; }
-    .form-group label {
-      display: block;
-      font-size: 11px;
-      font-weight: 600;
-      color: #475569;
-      margin-bottom: 3px;
-    }
-    .form-group input {
-      width: 100%;
-      padding: 8px 10px;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 13px;
-      outline: none;
-      background: #f8fafc;
-    }
-    .form-group input:focus { border-color: #2563eb; background: white; }
-    
-    .form-row { display: flex; gap: 6px; }
-    .form-row .form-group { flex: 1; margin-bottom: 8px; }
-    
-    .btn-full {
-      width: 100%;
-      padding: 10px;
-      border-radius: 10px;
-      border: none;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 5px;
-      touch-action: manipulation;
-    }
-    .btn-full:active { transform: scale(0.98); }
-    .btn-save { background: #2563eb; color: white; }
-    .btn-cancel { background: #f1f5f9; color: #64748b; }
-    
-    .toast {
-      position: fixed;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #0f172a;
-      color: white;
-      padding: 8px 18px;
-      border-radius: 16px;
-      font-size: 12px;
-      font-weight: 500;
-      z-index: 300;
-      opacity: 0;
-      transition: 0.3s;
-      pointer-events: none;
-    }
-    .toast.show { opacity: 1; top: 24px; }
-    .toast.success { background: #16a34a; }
-    .toast.error { background: #ef4444; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>ShopKeeper Pro • Firebase</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#1a1a2e;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:0;margin:0;}
+.app{width:100%;max-width:500px;background:#f0f0f0;min-height:100vh;display:flex;flex-direction:column;}
+.header{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;padding:10px 12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+.header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.logo{font-size:16px;font-weight:bold;display:flex;align-items:center;gap:5px;}
+.logo-icon{font-size:18px;}
+.firebase-badge{background:rgba(255,152,0,0.2);color:#ffa726;padding:3px 8px;border-radius:10px;font-size:9px;display:flex;align-items:center;gap:4px;font-weight:bold;}
+.firebase-badge .dot{width:6px;height:6px;border-radius:50%;background:#4caf50;display:inline-block;}
+.firebase-badge .dot.off{background:#f44336;}
+.search-wrap{display:flex;align-items:center;background:rgba(255,255,255,0.1);border-radius:15px;padding:2px 2px 2px 8px;}
+.search-wrap input{flex:1;background:transparent;border:none;color:#fff;padding:7px 4px;font-size:12px;outline:none;width:100%;}
+.search-wrap input::placeholder{color:rgba(255,255,255,0.4);font-size:11px;}
+.search-clear-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;width:22px;height:22px;border-radius:50%;font-size:10px;cursor:pointer;display:none;margin-right:2px;}
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:80px;}
+.stats{display:flex;gap:4px;padding:8px 8px 4px;}
+.stat-box{flex:1;background:#fff;border-radius:8px;padding:8px 4px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,0.1);}
+.stat-box .s-icon{font-size:16px;display:block;}
+.stat-box .s-val{font-size:16px;font-weight:bold;color:#1a1a2e;display:block;}
+.stat-box .s-lbl{font-size:8px;color:#777;text-transform:uppercase;font-weight:bold;}
+.actions{display:flex;gap:4px;padding:4px 8px 6px;}
+.btn{padding:8px 6px;border-radius:15px;border:none;font-weight:bold;font-size:10px;cursor:pointer;flex:1;text-align:center;white-space:nowrap;display:inline-block;text-decoration:none;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;background:#e0e0e0;color:#333;}
+.btn:active{opacity:0.7;transform:scale(0.96);}
+.btn-blue{background:#2196F3;color:#fff;}
+.btn-orange{background:#ff9800;color:#fff;}
+.btn-red{background:#fff;color:#f44336;border:1px solid #ffcdd2;}
+.list-section{padding:0 8px;}
+.list-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;padding:0 4px;}
+.list-title{font-size:10px;font-weight:bold;color:#777;text-transform:uppercase;}
+.list-count{font-size:9px;color:#777;background:#ddd;padding:2px 6px;border-radius:8px;}
+.card{background:#fff;border-radius:8px;padding:10px;margin-bottom:5px;box-shadow:0 1px 2px rgba(0,0,0,0.1);border-left:3px solid #2196F3;position:relative;}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.card-name{font-size:13px;font-weight:bold;color:#1a1a2e;flex:1;padding-right:6px;word-break:break-word;}
+.card-btns{display:flex;gap:3px;flex-shrink:0;}
+.cbtn{width:26px;height:26px;border-radius:6px;border:none;cursor:pointer;font-size:11px;display:inline-flex;align-items:center;justify-content:center;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;}
+.cbtn-edit{background:#e3f2fd;color:#2196F3;}
+.cbtn-del{background:#ffebee;color:#f44336;}
+.cbtn:active{opacity:0.7;}
+.prices{display:flex;gap:4px;margin-bottom:4px;}
+.price-box{flex:1;background:#f5f5f5;padding:5px 6px;border-radius:5px;}
+.price-lbl{font-size:8px;color:#777;font-weight:bold;}
+.price-val{font-size:13px;font-weight:bold;color:#1a1a2e;}
+.price-val.sale{color:#4caf50;}
+.meta-row{display:flex;gap:3px;flex-wrap:wrap;}
+.meta-tag{font-size:8px;padding:2px 5px;border-radius:8px;font-weight:bold;display:inline-flex;align-items:center;gap:2px;}
+.tag-date{background:#fff9c4;color:#f57f17;}
+.tag-sup{background:#e3f2fd;color:#1565c0;}
+.tag-con{background:#eee;color:#666;}
+.profit-badge{position:absolute;top:6px;right:6px;font-size:8px;font-weight:bold;padding:2px 5px;border-radius:8px;background:#e8f5e9;color:#2e7d32;}
+.profit-badge.loss{background:#ffebee;color:#c62828;}
+.empty{text-align:center;padding:30px 10px;color:#999;}
+.empty-icon{font-size:40px;display:block;margin-bottom:6px;}
+.empty-title{font-size:14px;font-weight:bold;color:#777;}
+.empty-text{font-size:11px;color:#999;}
+.fab{position:fixed;bottom:16px;right:16px;width:44px;height:44px;border-radius:50%;background:#ff9800;color:#fff;border:none;font-size:22px;cursor:pointer;z-index:99;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(255,152,0,0.4);-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;}
+.fab:active{opacity:0.7;transform:scale(0.9);}
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:200;display:none;justify-content:center;align-items:flex-end;}
+.modal.on{display:flex;}
+.sheet{background:#fff;width:100%;max-height:80vh;border-radius:16px 16px 0 0;padding:14px 12px 20px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.sheet-handle{width:30px;height:3px;background:#ccc;border-radius:2px;margin:0 auto 10px;}
+.sheet-title{font-size:15px;font-weight:bold;color:#1a1a2e;text-align:center;margin-bottom:10px;}
+.fgroup{margin-bottom:8px;}
+.fgroup label{display:block;font-size:10px;font-weight:bold;color:#555;margin-bottom:3px;}
+.fgroup label .req{color:#f44336;font-size:12px;}
+.fgroup input{width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;background:#fafafa;-webkit-appearance:none;-moz-appearance:none;appearance:none;}
+.fgroup input:focus{border-color:#ff9800;background:#fff;}
+.frow{display:flex;gap:4px;}
+.frow .fgroup{flex:1;margin-bottom:8px;}
+.btn-full{width:100%;padding:10px;border-radius:15px;border:none;font-weight:bold;font-size:13px;cursor:pointer;margin-bottom:4px;display:block;text-align:center;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;}
+.btn-full:active{opacity:0.7;transform:scale(0.97);}
+.save-btn{background:#ff9800;color:#fff;}
+.cancel-btn{background:#eee;color:#555;}
+.toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:8px 16px;border-radius:15px;font-size:11px;font-weight:bold;z-index:300;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;}
+.toast.ok{background:#4caf50;}
+.toast.err{background:#f44336;}
+.toast.warn{background:#ff9800;}
+.alert-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:250;display:none;justify-content:center;align-items:center;}
+.alert-overlay.on{display:flex;}
+.alert-box{background:#fff;border-radius:12px;padding:18px;width:85%;max-width:280px;text-align:center;}
+.alert-icon{font-size:36px;margin-bottom:6px;display:block;}
+.alert-title{font-size:14px;font-weight:bold;color:#1a1a2e;margin-bottom:4px;}
+.alert-text{font-size:11px;color:#777;margin-bottom:12px;}
+.alert-btns{display:flex;gap:6px;}
+.alert-btns button{flex:1;padding:8px;border-radius:12px;border:none;font-weight:bold;font-size:11px;cursor:pointer;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;}
+.alert-yes{background:#f44336;color:#fff;}
+.alert-no{background:#eee;color:#555;}
+.sync-status{text-align:center;padding:3px;font-size:8px;color:#999;margin-top:2px;}
+</style>
 </head>
 <body>
 
-<div class="app-container">
-  <div class="mobile-header">
-    <div class="header-top">
-      <div class="logo">
-        <i class="fas fa-store-alt"></i>
-        <span>ShopKeeper</span>
-      </div>
-      <div class="status-dot" id="statusDot"></div>
-    </div>
-    <div class="search-input-wrapper">
-      <i class="fas fa-search"></i>
-      <input type="text" id="searchInput" placeholder="Search products..." autocomplete="off">
-    </div>
-  </div>
-
-  <div class="mobile-content">
-    <div class="stats-row">
-      <div class="stat-card">
-        <i class="fas fa-boxes"></i>
-        <div class="stat-value" id="totalProducts">0</div>
-        <div class="stat-label">Products</div>
-      </div>
-      <div class="stat-card">
-        <i class="fas fa-truck"></i>
-        <div class="stat-value" id="totalSuppliers">0</div>
-        <div class="stat-label">Suppliers</div>
-      </div>
-      <div class="stat-card">
-        <i class="fas fa-list"></i>
-        <div class="stat-value" id="totalEntries">0</div>
-        <div class="stat-label">Entries</div>
-      </div>
-    </div>
-
-    <div class="quick-actions">
-      <button class="btn-action btn-add" id="btnAddEntry">
-        <i class="fas fa-plus-circle"></i> New Entry
-      </button>
-      <button class="btn-action btn-reset" id="btnReset">
-        <i class="fas fa-trash-alt"></i> Clear All
-      </button>
-    </div>
-
-    <div class="product-list">
-      <div class="section-title">📋 Recent Entries</div>
-      <div id="productListContainer"></div>
-    </div>
-  </div>
+<div class="app">
+<div class="header">
+<div class="header-row">
+<div class="logo"><span class="logo-icon">&#127978;</span> ShopKeeper Pro</div>
+<div class="firebase-badge"><span class="dot" id="syncDot"></span> <span id="syncText">Firebase</span></div>
+</div>
+<div class="search-wrap">
+<span style="color:rgba(255,255,255,0.4);font-size:11px;">&#128269;</span>
+<input type="text" id="searchInput" placeholder="Search products, suppliers..." autocomplete="off">
+<button class="search-clear-btn" id="clearSearch">X</button>
+</div>
 </div>
 
-<button class="fab" id="fabAdd">➕</button>
+<div class="content">
+<div class="stats">
+<div class="stat-box"><span class="s-icon">&#128230;</span><span class="s-val" id="totalProducts">0</span><span class="s-lbl">Products</span></div>
+<div class="stat-box"><span class="s-icon">&#128666;</span><span class="s-val" id="totalSuppliers">0</span><span class="s-lbl">Suppliers</span></div>
+<div class="stat-box"><span class="s-icon">&#128203;</span><span class="s-val" id="totalEntries">0</span><span class="s-lbl">Entries</span></div>
+</div>
 
-<div class="modal-overlay" id="entryModal">
-  <div class="bottom-sheet" id="bottomSheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title" id="modalTitle">Add New Entry</div>
-    
-    <div class="form-group">
-      <label>Product Name *</label>
-      <input type="text" id="productName" placeholder="e.g., Basmati Rice" autocomplete="off">
-    </div>
-    
-    <div class="form-row">
-      <div class="form-group">
-        <label>Cost (₹) *</label>
-        <input type="number" id="costPrice" placeholder="0.00" step="0.01" min="0">
-      </div>
-      <div class="form-group">
-        <label>Sale (₹) *</label>
-        <input type="number" id="salePrice" placeholder="0.00" step="0.01" min="0">
-      </div>
-    </div>
-    
-    <div class="form-group">
-      <label>Date *</label>
-      <input type="date" id="effectiveDate">
-    </div>
-    
-    <div class="form-group">
-      <label>Supplier</label>
-      <input type="text" id="supplierName" placeholder="e.g., ABC Traders" autocomplete="off">
-    </div>
-    
-    <div class="form-group">
-      <label>Contact</label>
-      <input type="tel" id="supplierContact" placeholder="Phone/email" autocomplete="off">
-    </div>
-    
-    <input type="hidden" id="editingId" value="">
-    
-    <button class="btn-full btn-save" id="btnSave">💾 Save Entry</button>
-    <button class="btn-full btn-cancel" id="btnCancel">Cancel</button>
-  </div>
+<div class="actions">
+<button class="btn btn-orange" id="btnAdd">+ Add Entry</button>
+<button class="btn btn-blue" id="btnExport">&#9654; Export</button>
+<button class="btn btn-red" id="btnReset">X Clear All</button>
+</div>
+
+<div class="list-section">
+<div class="list-header">
+<span class="list-title">&#128203; Inventory List</span>
+<span class="list-count" id="listCount">0</span>
+</div>
+<div class="sync-status" id="syncStatus">Connecting to Firebase...</div>
+<div id="productList"></div>
+</div>
+</div>
+
+<button class="fab" id="fabAdd">+</button>
+</div>
+
+<div class="modal" id="entryModal">
+<div class="sheet" id="sheet">
+<div class="sheet-handle"></div>
+<div class="sheet-title" id="modalTitle">Add New Entry</div>
+
+<div class="fgroup">
+<label>Product Name <span class="req">*</span></label>
+<input type="text" id="fProductName" placeholder="e.g. Basmati Rice" autocomplete="off">
+</div>
+
+<div class="frow">
+<div class="fgroup">
+<label>Cost Price (₹) <span class="req">*</span></label>
+<input type="number" id="fCostPrice" placeholder="0.00" step="0.01" min="0">
+</div>
+<div class="fgroup">
+<label>Sale Price (₹) <span class="req">*</span></label>
+<input type="number" id="fSalePrice" placeholder="0.00" step="0.01" min="0">
+</div>
+</div>
+
+<div class="fgroup">
+<label>Effective Date <span class="req">*</span></label>
+<input type="date" id="fDate">
+</div>
+
+<div class="fgroup">
+<label>Supplier Name</label>
+<input type="text" id="fSupplier" placeholder="e.g. ABC Traders" autocomplete="off">
+</div>
+
+<div class="fgroup">
+<label>Contact Number</label>
+<input type="tel" id="fContact" placeholder="Phone or email" autocomplete="off">
+</div>
+
+<input type="hidden" id="fEditId" value="">
+
+<button class="btn-full save-btn" id="btnSave">&#128190; Save to Firebase</button>
+<button class="btn-full cancel-btn" id="btnCancel">Cancel</button>
+</div>
+</div>
+
+<div class="alert-overlay" id="alertDialog">
+<div class="alert-box">
+<span class="alert-icon" id="alertIcon">&#9888;</span>
+<div class="alert-title" id="alertTitle">Confirm</div>
+<div class="alert-text" id="alertText">Are you sure?</div>
+<div class="alert-btns">
+<button class="alert-no" id="alertNo">Cancel</button>
+<button class="alert-yes" id="alertYes">Delete</button>
+</div>
+</div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js">
+</script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js">
+</script>
+
 <script>
-// ========== COMPLETE APP LOGIC ==========
-(function() {
-  const STORAGE_KEY = 'shopkeeper_apk_data';
-  let entries = [];
-  let currentFilter = '';
-  
-  // DOM Elements
-  const productListContainer = document.getElementById('productListContainer');
-  const searchInput = document.getElementById('searchInput');
-  const entryModal = document.getElementById('entryModal');
-  const modalTitle = document.getElementById('modalTitle');
-  const toast = document.getElementById('toast');
-  const statusDot = document.getElementById('statusDot');
-  
-  function getTodayDateString() {
-    const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  }
-  
-  function formatDate(dateStr) {
-    if (!dateStr) return '—';
-    const [y, m, d] = dateStr.split('-');
-    return `${d}/${m}/${y}`;
-  }
-  
-  function escapeHtml(text) {
-    if (!text) return '—';
-    return String(text).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-  }
-  
-  function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
-  }
-  
-  function showToast(msg, type = 'success') {
-    toast.textContent = msg;
-    toast.className = `toast ${type} show`;
-    clearTimeout(toast._timeout);
-    toast._timeout = setTimeout(() => { toast.className = 'toast'; }, 2000);
-  }
-  
-  function loadData() {
-    try { 
-      entries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-      if (entries.length === 0) {
-        // Add sample data
-        const today = getTodayDateString();
-        entries = [
-          { id: generateId(), productName: 'Basmati Rice', cost: 85, sale: 120, date: today, supplier: 'Golden Grains', contact: '9876543210' },
-          { id: generateId(), productName: 'Sunflower Oil', cost: 140, sale: 175, date: today, supplier: 'Pure Oils Co.', contact: '9988776655' },
-          { id: generateId(), productName: 'Green Tea', cost: 110, sale: 150, date: today, supplier: 'Herbal World', contact: '8899001122' }
-        ];
-        saveData();
-      }
-    } catch(e) { entries = []; }
-  }
-  
-  function saveData() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-  }
-  
-  function renderProductCards() {
-    const filter = currentFilter.toLowerCase();
-    let filtered = entries.filter(e => 
-      !filter || 
-      (e.productName||'').toLowerCase().includes(filter) ||
-      (e.supplier||'').toLowerCase().includes(filter) ||
-      (e.contact||'').toLowerCase().includes(filter)
-    );
-    
-    filtered.sort((a, b) => {
-      if ((a.productName||'') < (b.productName||'')) return -1;
-      if ((a.productName||'') > (b.productName||'')) return 1;
-      return new Date(b.date||0) - new Date(a.date||0);
-    });
-    
-    if (filtered.length === 0) {
-      productListContainer.innerHTML = `
-        <div class="empty-state">
-          <i class="fas fa-box-open"></i>
-          <p>${filter ? 'No matching entries' : 'No entries yet'}</p>
-          <p style="font-size:11px;">Tap + to add product</p>
-        </div>`;
-      updateStats();
-      return;
+// ==================== FIREBASE CONFIG ====================
+// REPLACE THESE VALUES WITH YOUR FIREBASE PROJECT CONFIG
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDIfpVbV3K7G7aMQSKI09dcxS1uf1IGf74",
+  authDomain: "al-noor-karyana-28699.firebaseapp.com",
+  projectId: "al-noor-karyana-28699",
+  storageBucket: "al-noor-karyana-28699.firebasestorage.app",
+  messagingSenderId: "956613894846",
+  appId: "1:956613894846:web:3d3285eb65f1a7aca174ef",
+  measurementId: "G-1RSTMHM6FV"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();
+
+// Enable offline persistence
+db.enablePersistence({ synchronizeTabs: true })
+  .then(function() {
+    console.log('Firebase offline persistence enabled');
+  })
+  .catch(function(err) {
+    if (err.code === 'failed-precondition') {
+      console.log('Multiple tabs open, persistence limited');
+    } else if (err.code === 'unimplemented') {
+      console.log('Browser does not support persistence');
     }
-    
-    productListContainer.innerHTML = filtered.map(entry => {
-      const margin = (entry.sale||0) - (entry.cost||0);
-      const marginPercent = (entry.cost||0) > 0 ? ((margin / entry.cost) * 100).toFixed(1) : 0;
-      const isPositive = margin >= 0;
-      
-      return `
-        <div class="product-card">
-          ${margin !== 0 ? `<div class="margin-badge ${isPositive ? '' : 'negative'}">${isPositive ? '+' : ''}${marginPercent}%</div>` : ''}
-          <div class="product-header">
-            <div class="product-name">${escapeHtml(entry.productName)}</div>
-            <div class="product-actions">
-              <button class="btn-edit" data-id="${escapeHtml(entry.id)}">✏️</button>
-              <button class="btn-delete" data-id="${escapeHtml(entry.id)}">🗑️</button>
-            </div>
-          </div>
-          <div class="price-row">
-            <div class="price-tag">
-              <div class="label">Cost</div>
-              <div class="value">₹${Number(entry.cost||0).toFixed(2)}</div>
-            </div>
-            <div class="price-tag">
-              <div class="label">Sale</div>
-              <div class="value sale">₹${Number(entry.sale||0).toFixed(2)}</div>
-            </div>
-          </div>
-          <div class="meta-row">
-            <span class="meta-badge badge-date">📅 ${formatDate(entry.date)}</span>
-            ${entry.supplier ? `<span class="meta-badge badge-supplier">👤 ${escapeHtml(entry.supplier)}</span>` : ''}
-            ${entry.contact ? `<span class="meta-badge badge-contact">📞 ${escapeHtml(entry.contact)}</span>` : ''}
-          </div>
-        </div>`;
-    }).join('');
-    
-    // Bind events
-    document.querySelectorAll('.btn-edit').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        handleEdit(this.getAttribute('data-id'));
-      });
-    });
-    
-    document.querySelectorAll('.btn-delete').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        handleDelete(this.getAttribute('data-id'));
-      });
-    });
-    
-    updateStats();
+  });
+
+// ==================== APP LOGIC ====================
+(function() {
+  'use strict';
+
+  var entries = [];
+  var currentFilter = '';
+  var alertCallback = null;
+  var toastTimer = null;
+  var unsubscribe = null;
+
+  // ========== GET ELEMENTS ==========
+  function g(id) { return document.getElementById(id); }
+
+  var searchInput = g('searchInput');
+  var clearSearch = g('clearSearch');
+  var productList = g('productList');
+  var totalProducts = g('totalProducts');
+  var totalSuppliers = g('totalSuppliers');
+  var totalEntries = g('totalEntries');
+  var listCount = g('listCount');
+  var entryModal = g('entryModal');
+  var sheet = g('sheet');
+  var modalTitle = g('modalTitle');
+  var fProductName = g('fProductName');
+  var fCostPrice = g('fCostPrice');
+  var fSalePrice = g('fSalePrice');
+  var fDate = g('fDate');
+  var fSupplier = g('fSupplier');
+  var fContact = g('fContact');
+  var fEditId = g('fEditId');
+  var alertDialog = g('alertDialog');
+  var alertIcon = g('alertIcon');
+  var alertTitle = g('alertTitle');
+  var alertText = g('alertText');
+  var toast = g('toast');
+  var syncDot = g('syncDot');
+  var syncText = g('syncText');
+  var syncStatus = g('syncStatus');
+
+  // ========== UTILITIES ==========
+  function today() {
+    var d = new Date();
+    var m = d.getMonth() + 1;
+    var day = d.getDate();
+    return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (day < 10 ? '0' : '') + day;
   }
-  
-  function updateStats() {
-    document.getElementById('totalProducts').textContent = 
-      new Set(entries.map(e => e.productName).filter(Boolean)).size;
-    document.getElementById('totalSuppliers').textContent = 
-      new Set(entries.map(e => e.supplier).filter(Boolean)).size;
-    document.getElementById('totalEntries').textContent = entries.length;
+
+  function formatDate(ds) {
+    if (!ds) return '-';
+    var p = ds.split('-');
+    return p[2] + '/' + p[1] + '/' + p[0];
   }
-  
-  function openModal(title = 'Add New Entry') {
-    modalTitle.textContent = title;
-    entryModal.classList.add('active');
+
+  function esc(s) {
+    if (!s) return '-';
+    s = String(s);
+    s = s.replace(/&/g, '&amp;');
+    s = s.replace(/</g, '&lt;');
+    s = s.replace(/>/g, '&gt;');
+    s = s.replace(/"/g, '&quot;');
+    return s;
+  }
+
+  // ========== TOAST ==========
+  function showToast(msg, type) {
+    type = type || 'ok';
+    if (toastTimer) clearTimeout(toastTimer);
+    toast.textContent = msg;
+    toast.className = 'toast ' + type + ' show';
+    toastTimer = setTimeout(function() {
+      toast.className = 'toast';
+    }, 2000);
+  }
+
+  // ========== ALERT ==========
+  function showAlert(title, text, icon, cb) {
+    alertIcon.textContent = icon || '!';
+    alertTitle.textContent = title;
+    alertText.textContent = text;
+    alertDialog.className = 'alert-overlay on';
+    alertCallback = cb;
+  }
+
+  function hideAlert() {
+    alertDialog.className = 'alert-overlay';
+    alertCallback = null;
+  }
+
+  // ========== MODAL ==========
+  function openModal(title) {
+    modalTitle.textContent = title || 'Add New Entry';
+    entryModal.className = 'modal on';
     document.body.style.overflow = 'hidden';
-    setTimeout(() => {
-      document.getElementById('productName').focus();
+    setTimeout(function() {
+      if (fProductName) fProductName.focus();
     }, 300);
   }
-  
+
   function closeModal() {
-    entryModal.classList.remove('active');
+    entryModal.className = 'modal';
     document.body.style.overflow = '';
     clearForm();
   }
-  
+
   function clearForm() {
-    document.getElementById('productName').value = '';
-    document.getElementById('costPrice').value = '';
-    document.getElementById('salePrice').value = '';
-    document.getElementById('effectiveDate').value = getTodayDateString();
-    document.getElementById('supplierName').value = '';
-    document.getElementById('supplierContact').value = '';
-    document.getElementById('editingId').value = '';
+    fProductName.value = '';
+    fCostPrice.value = '';
+    fSalePrice.value = '';
+    fDate.value = today();
+    fSupplier.value = '';
+    fContact.value = '';
+    fEditId.value = '';
   }
-  
-  function handleEdit(id) {
-    const entry = entries.find(e => e.id === id);
-    if (!entry) return;
-    
-    document.getElementById('productName').value = entry.productName || '';
-    document.getElementById('costPrice').value = entry.cost || '';
-    document.getElementById('salePrice').value = entry.sale || '';
-    document.getElementById('effectiveDate').value = entry.date || getTodayDateString();
-    document.getElementById('supplierName').value = entry.supplier || '';
-    document.getElementById('supplierContact').value = entry.contact || '';
-    document.getElementById('editingId').value = entry.id;
-    
-    openModal('Edit Entry');
-  }
-  
-  function handleDelete(id) {
-    if (!confirm('Delete this entry?')) return;
-    
-    entries = entries.filter(e => e.id !== id);
-    saveData();
-    
-    if (document.getElementById('editingId').value === id) {
-      closeModal();
-    }
-    
-    renderProductCards();
-    showToast('Entry deleted', 'error');
-  }
-  
-  function handleSave() {
-    const productName = document.getElementById('productName').value.trim();
-    const cost = parseFloat(document.getElementById('costPrice').value);
-    const sale = parseFloat(document.getElementById('salePrice').value);
-    const date = document.getElementById('effectiveDate').value;
-    const supplier = document.getElementById('supplierName').value.trim();
-    const contact = document.getElementById('supplierContact').value.trim();
-    const editingId = document.getElementById('editingId').value;
-    
-    if (!productName) { showToast('Enter product name', 'error'); return; }
-    if (isNaN(cost) || cost < 0) { showToast('Valid cost required', 'error'); return; }
-    if (isNaN(sale) || sale < 0) { showToast('Valid sale price required', 'error'); return; }
-    if (!date) { showToast('Select a date', 'error'); return; }
-    
-    if (editingId) {
-      const idx = entries.findIndex(e => e.id === editingId);
-      if (idx !== -1) {
-        entries[idx] = { ...entries[idx], productName, cost, sale, date, supplier, contact };
-      }
+
+  // ========== FIREBASE SYNC STATUS ==========
+  function updateSyncStatus(online) {
+    if (online) {
+      syncDot.className = 'dot';
+      syncText.textContent = 'Firebase Online';
+      syncStatus.textContent = 'Data syncing to cloud';
+      syncStatus.style.color = '#4caf50';
     } else {
-      entries.push({ id: generateId(), productName, cost, sale, date, supplier, contact });
+      syncDot.className = 'dot off';
+      syncText.textContent = 'Offline';
+      syncStatus.textContent = 'Changes saved locally - will sync when online';
+      syncStatus.style.color = '#f44336';
     }
-    
-    saveData();
-    renderProductCards();
-    closeModal();
-    showToast(editingId ? 'Entry updated!' : 'Entry added!');
   }
-  
+
+  // ========== FIREBASE OPERATIONS ==========
+  function getEntriesRef() {
+    return db.collection('shared').doc('inventory').collection('entries');
+  }
+
+  function setupRealtimeListener() {
+    if (unsubscribe) {
+      unsubscribe();
+    }
+
+    var ref = getEntriesRef().orderBy('productName').orderBy('date', 'desc');
+
+    unsubscribe = ref.onSnapshot(
+      function(snapshot) {
+        var fireEntries = [];
+        snapshot.forEach(function(doc) {
+          var data = doc.data();
+          data.id = doc.id;
+          fireEntries.push(data);
+        });
+        entries = fireEntries;
+        updateSyncStatus(true);
+        render();
+        g('syncStatus').textContent = 'Synced with Firebase • ' + entries.length + ' entries';
+        g('syncStatus').style.color = '#4caf50';
+      },
+      function(error) {
+        console.log('Firestore listener error (might be offline):', error);
+        updateSyncStatus(false);
+        g('syncStatus').textContent = 'Offline mode - using cached data';
+        g('syncStatus').style.color = '#f44336';
+      }
+    );
+  }
+
+  function addToFirebase(entry) {
+    var ref = getEntriesRef();
+    var data = {
+      productName: entry.productName,
+      cost: entry.cost,
+      sale: entry.sale,
+      date: entry.date,
+      supplier: entry.supplier || '',
+      contact: entry.contact || '',
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    return ref.add(data).then(function(docRef) {
+      return docRef.id;
+    });
+  }
+
+  function updateInFirebase(id, entry) {
+    var ref = getEntriesRef().doc(id);
+    var data = {
+      productName: entry.productName,
+      cost: entry.cost,
+      sale: entry.sale,
+      date: entry.date,
+      supplier: entry.supplier || '',
+      contact: entry.contact || '',
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    return ref.update(data);
+  }
+
+  function deleteFromFirebase(id) {
+    var ref = getEntriesRef().doc(id);
+    return ref.delete();
+  }
+
+  function clearAllFirebase() {
+    var ref = getEntriesRef();
+    return ref.get().then(function(snapshot) {
+      var batch = db.batch();
+      snapshot.forEach(function(doc) {
+        batch.delete(doc.ref);
+      });
+      return batch.commit();
+    });
+  }
+
+  // ========== RENDER ==========
+  function render() {
+    var filter = currentFilter.toLowerCase();
+    var filtered = [];
+    for (var i = 0; i < entries.length; i++) {
+      var e = entries[i];
+      if (!filter ||
+        (e.productName && e.productName.toLowerCase().indexOf(filter) !== -1) ||
+        (e.supplier && e.supplier.toLowerCase().indexOf(filter) !== -1) ||
+        (e.contact && e.contact.toLowerCase().indexOf(filter) !== -1)) {
+        filtered.push(e);
+      }
+    }
+
+    // Sort
+    filtered.sort(function(a, b) {
+      var na = (a.productName || '').toLowerCase();
+      var nb = (b.productName || '').toLowerCase();
+      if (na < nb) return -1;
+      if (na > nb) return 1;
+      return new Date(b.date || 0) - new Date(a.date || 0);
+    });
+
+    listCount.textContent = filtered.length + ' entries';
+
+    if (filtered.length === 0) {
+      productList.innerHTML = '<div class="empty"><span class="empty-icon">&#128232;</span><div class="empty-title">' +
+        (filter ? 'No matching entries' : 'No entries yet') +
+        '</div><div class="empty-text">Tap + to add product to Firebase</div></div>';
+    } else {
+      var html = '';
+      for (var j = 0; j < filtered.length; j++) {
+        var entry = filtered[j];
+        var margin = (entry.sale || 0) - (entry.cost || 0);
+        var mp = (entry.cost || 0) > 0 ? ((margin / entry.cost) * 100).toFixed(1) : 0;
+        var isProfit = margin >= 0;
+
+        html += '<div class="card">';
+        if (margin !== 0) {
+          html += '<div class="profit-badge' + (isProfit ? '' : ' loss') + '">' +
+            (isProfit ? '+' : '') + mp + '%</div>';
+        }
+        html += '<div class="card-top">';
+        html += '<div class="card-name">' + esc(entry.productName) + '</div>';
+        html += '<div class="card-btns">';
+        html += '<button class="cbtn cbtn-edit" data-eid="' + entry.id + '">&#9998;</button>';
+        html += '<button class="cbtn cbtn-del" data-did="' + entry.id + '">&#128465;</button>';
+        html += '</div></div>';
+        html += '<div class="prices">';
+        html += '<div class="price-box"><div class="price-lbl">COST</div><div class="price-val">₹' + Number(entry.cost || 0).toFixed(2) + '</div></div>';
+        html += '<div class="price-box"><div class="price-lbl">SALE</div><div class="price-val sale">₹' + Number(entry.sale || 0).toFixed(2) + '</div></div>';
+        html += '</div>';
+        html += '<div class="meta-row">';
+        html += '<span class="meta-tag tag-date">&#128197; ' + formatDate(entry.date) + '</span>';
+        if (entry.supplier) html += '<span class="meta-tag tag-sup">&#128666; ' + esc(entry.supplier) + '</span>';
+        if (entry.contact) html += '<span class="meta-tag tag-con">&#128222; ' + esc(entry.contact) + '</span>';
+        html += '</div></div>';
+      }
+      productList.innerHTML = html;
+
+      // Bind edit buttons
+      var editBtns = productList.querySelectorAll('[data-eid]');
+      for (var k = 0; k < editBtns.length; k++) {
+        (function(id) {
+          editBtns[k].onclick = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            handleEdit(id);
+            return false;
+          };
+        })(editBtns[k].getAttribute('data-eid'));
+      }
+
+      // Bind delete buttons
+      var delBtns = productList.querySelectorAll('[data-did]');
+      for (var m = 0; m < delBtns.length; m++) {
+        (function(id) {
+          delBtns[m].onclick = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            handleDelete(id);
+            return false;
+          };
+        })(delBtns[m].getAttribute('data-did'));
+      }
+    }
+
+    // Stats
+    var up = {};
+    var us = {};
+    for (var n = 0; n < entries.length; n++) {
+      if (entries[n].productName) up[entries[n].productName] = true;
+      if (entries[n].supplier) us[entries[n].supplier] = true;
+    }
+    totalProducts.textContent = Object.keys(up).length;
+    totalSuppliers.textContent = Object.keys(us).length;
+    totalEntries.textContent = entries.length;
+  }
+
+  // ========== CRUD ==========
+  function handleEdit(id) {
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].id === id) {
+        var e = entries[i];
+        fProductName.value = e.productName || '';
+        fCostPrice.value = e.cost || '';
+        fSalePrice.value = e.sale || '';
+        fDate.value = e.date || today();
+        fSupplier.value = e.supplier || '';
+        fContact.value = e.contact || '';
+        fEditId.value = e.id;
+        openModal('Edit Entry (Firebase)');
+        return;
+      }
+    }
+  }
+
+  function handleDelete(id) {
+    var entry = null;
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].id === id) { entry = entries[i]; break; }
+    }
+    if (!entry) return;
+
+    showAlert('Delete from Firebase', 'Delete "' + entry.productName + '"? This removes from cloud.', '🗑', function() {
+      deleteFromFirebase(id).then(function() {
+        if (fEditId.value === id) closeModal();
+        showToast('Deleted from Firebase!', 'err');
+      }).catch(function(err) {
+        showToast('Error: ' + err.message, 'err');
+      });
+    });
+  }
+
+  function handleSave() {
+    var pn = fProductName.value.trim();
+    var cost = parseFloat(fCostPrice.value);
+    var sale = parseFloat(fSalePrice.value);
+    var date = fDate.value;
+    var sup = fSupplier.value.trim();
+    var con = fContact.value.trim();
+    var eid = fEditId.value;
+
+    if (!pn) { showToast('Enter product name', 'warn'); fProductName.focus(); return; }
+    if (isNaN(cost) || cost < 0) { showToast('Valid cost needed', 'warn'); fCostPrice.focus(); return; }
+    if (isNaN(sale) || sale < 0) { showToast('Valid sale needed', 'warn'); fSalePrice.focus(); return; }
+    if (!date) { showToast('Select date', 'warn'); fDate.focus(); return; }
+
+    var entryData = {
+      productName: pn,
+      cost: cost,
+      sale: sale,
+      date: date,
+      supplier: sup,
+      contact: con
+    };
+
+    if (eid) {
+      // Update existing
+      updateInFirebase(eid, entryData).then(function() {
+        closeModal();
+        showToast('Updated in Firebase!', 'ok');
+      }).catch(function(err) {
+        showToast('Error: ' + err.message, 'err');
+      });
+    } else {
+      // Add new
+      addToFirebase(entryData).then(function(docId) {
+        closeModal();
+        showToast('Saved to Firebase!', 'ok');
+      }).catch(function(err) {
+        showToast('Error: ' + err.message, 'err');
+      });
+    }
+  }
+
   function handleReset() {
-    if (!confirm('Delete ALL entries? This cannot be undone!')) return;
-    entries = [];
-    saveData();
-    renderProductCards();
-    showToast('All data cleared', 'error');
+    showAlert('Clear Firebase', 'Delete ALL entries from cloud? This cannot be undone!', '⚠', function() {
+      clearAllFirebase().then(function() {
+        showToast('All data cleared from Firebase!', 'err');
+      }).catch(function(err) {
+        showToast('Error: ' + err.message, 'err');
+      });
+    });
   }
-  
-  // Event Bindings
-  document.getElementById('fabAdd').addEventListener('click', () => {
-    clearForm();
-    openModal();
-  });
-  
-  document.getElementById('btnAddEntry').addEventListener('click', () => {
-    clearForm();
-    openModal();
-  });
-  
-  document.getElementById('btnReset').addEventListener('click', handleReset);
-  document.getElementById('btnSave').addEventListener('click', handleSave);
-  document.getElementById('btnCancel').addEventListener('click', closeModal);
-  
-  entryModal.addEventListener('click', function(e) {
-    if (e.target === entryModal) closeModal();
-  });
-  
-  searchInput.addEventListener('input', function() {
-    currentFilter = this.value;
-    renderProductCards();
-  });
-  
-  // Swipe to close modal
-  const bottomSheet = document.getElementById('bottomSheet');
-  let touchStartY = 0;
-  bottomSheet.addEventListener('touchstart', function(e) {
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-  
-  bottomSheet.addEventListener('touchmove', function(e) {
-    if (e.touches[0].clientY - touchStartY > 50 && bottomSheet.scrollTop <= 5) {
-      closeModal();
+
+  function handleExport() {
+    if (entries.length === 0) { showToast('Nothing to export', 'warn'); return; }
+
+    var csv = 'Product,Cost,Sale,Margin,Date,Supplier,Contact\n';
+    for (var i = 0; i < entries.length; i++) {
+      var e = entries[i];
+      var margin = ((e.sale || 0) - (e.cost || 0)).toFixed(2);
+      csv += '"' + (e.productName || '') + '","' + (e.cost || 0) + '","' + (e.sale || 0) + '","' + margin + '","' + (e.date || '') + '","' + (e.supplier || '') + '","' + (e.contact || '') + '"\n';
     }
-  }, { passive: true });
-  
-  // Online/Offline
-  function updateOnlineStatus() {
-    statusDot.className = navigator.onLine ? 'status-dot' : 'status-dot offline';
+
+    var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'firebase-export-' + today() + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('Exported from Firebase!', 'ok');
   }
-  window.addEventListener('online', updateOnlineStatus);
-  window.addEventListener('offline', updateOnlineStatus);
-  
-  // Init
-  document.getElementById('effectiveDate').value = getTodayDateString();
-  loadData();
-  renderProductCards();
-  updateOnlineStatus();
-  
-  console.log('✅ ShopKeeper Pro APK Ready');
+
+  // ========== EVENT BINDING ==========
+  g('fabAdd').onclick = function() { clearForm(); openModal(); };
+  g('btnAdd').onclick = function() { clearForm(); openModal(); };
+  g('btnSave').onclick = handleSave;
+  g('btnCancel').onclick = closeModal;
+  g('btnReset').onclick = handleReset;
+  g('btnExport').onclick = handleExport;
+  g('alertYes').onclick = function() { if (alertCallback) alertCallback(); hideAlert(); };
+  g('alertNo').onclick = hideAlert;
+
+  entryModal.onclick = function(e) { if (e.target === entryModal) closeModal(); };
+  alertDialog.onclick = function(e) { if (e.target === alertDialog) hideAlert(); };
+
+  searchInput.oninput = function() {
+    currentFilter = searchInput.value;
+    clearSearch.style.display = currentFilter ? 'inline-block' : 'none';
+    render();
+  };
+  clearSearch.onclick = function() {
+    searchInput.value = '';
+    currentFilter = '';
+    clearSearch.style.display = 'none';
+    searchInput.focus();
+    render();
+  };
+
+  // Touch swipe
+  var touchY = 0;
+  if (sheet) {
+    sheet.addEventListener('touchstart', function(e) { touchY = e.touches[0].clientY; }, false);
+    sheet.addEventListener('touchmove', function(e) {
+      if (e.touches[0].clientY - touchY > 50 && sheet.scrollTop <= 5) closeModal();
+    }, false);
+  }
+
+  // Online/offline detection
+  window.addEventListener('online', function() {
+    updateSyncStatus(true);
+    g('syncStatus').textContent = 'Back online - syncing...';
+    g('syncStatus').style.color = '#ff9800';
+    setupRealtimeListener();
+  });
+  window.addEventListener('offline', function() {
+    updateSyncStatus(false);
+    g('syncStatus').textContent = 'Offline - data cached locally';
+    g('syncStatus').style.color = '#f44336';
+  });
+
+  // Initial online check
+  if (navigator.onLine) {
+    updateSyncStatus(true);
+  } else {
+    updateSyncStatus(false);
+  }
+
+  // ========== INIT ==========
+  function init() {
+    fDate.value = today();
+    setupRealtimeListener();
+  }
+
+  init();
 })();
 </script>
-
 </body>
 </html>
