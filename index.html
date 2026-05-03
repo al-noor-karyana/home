@@ -3,204 +3,220 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-<title>ShopKeeper Pro • Firebase</title>
+<title>ShopKeeper Pro • Firebase Cloud</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#1a1a2e;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:0;margin:0;}
-.app{width:100%;max-width:500px;background:#f0f0f0;min-height:100vh;display:flex;flex-direction:column;}
-.header{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;padding:10px 12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,0.3);}
-.header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.logo{font-size:16px;font-weight:bold;display:flex;align-items:center;gap:5px;}
-.logo-icon{font-size:18px;}
-.firebase-badge{background:rgba(255,152,0,0.2);color:#ffa726;padding:3px 8px;border-radius:10px;font-size:9px;display:flex;align-items:center;gap:4px;font-weight:bold;}
-.firebase-badge .dot{width:6px;height:6px;border-radius:50%;background:#4caf50;display:inline-block;}
-.firebase-badge .dot.off{background:#f44336;}
-.search-wrap{display:flex;align-items:center;background:rgba(255,255,255,0.1);border-radius:15px;padding:2px 2px 2px 8px;}
-.search-wrap input{flex:1;background:transparent;border:none;color:#fff;padding:7px 4px;font-size:12px;outline:none;width:100%;}
-.search-wrap input::placeholder{color:rgba(255,255,255,0.4);font-size:11px;}
-.search-clear-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;width:22px;height:22px;border-radius:50%;font-size:10px;cursor:pointer;display:none;margin-right:2px;}
-.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:80px;}
-.stats{display:flex;gap:4px;padding:8px 8px 4px;}
-.stat-box{flex:1;background:#fff;border-radius:8px;padding:8px 4px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,0.1);}
-.stat-box .s-icon{font-size:16px;display:block;}
-.stat-box .s-val{font-size:16px;font-weight:bold;color:#1a1a2e;display:block;}
-.stat-box .s-lbl{font-size:8px;color:#777;text-transform:uppercase;font-weight:bold;}
-.actions{display:flex;gap:4px;padding:4px 8px 6px;}
-.btn{padding:8px 6px;border-radius:15px;border:none;font-weight:bold;font-size:10px;cursor:pointer;flex:1;text-align:center;white-space:nowrap;display:inline-block;text-decoration:none;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;background:#e0e0e0;color:#333;}
-.btn:active{opacity:0.7;transform:scale(0.96);}
-.btn-blue{background:#2196F3;color:#fff;}
-.btn-orange{background:#ff9800;color:#fff;}
-.btn-red{background:#fff;color:#f44336;border:1px solid #ffcdd2;}
-.list-section{padding:0 8px;}
-.list-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;padding:0 4px;}
-.list-title{font-size:10px;font-weight:bold;color:#777;text-transform:uppercase;}
-.list-count{font-size:9px;color:#777;background:#ddd;padding:2px 6px;border-radius:8px;}
-.card{background:#fff;border-radius:8px;padding:10px;margin-bottom:5px;box-shadow:0 1px 2px rgba(0,0,0,0.1);border-left:3px solid #2196F3;position:relative;}
-.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
-.card-name{font-size:13px;font-weight:bold;color:#1a1a2e;flex:1;padding-right:6px;word-break:break-word;}
-.card-btns{display:flex;gap:3px;flex-shrink:0;}
-.cbtn{width:26px;height:26px;border-radius:6px;border:none;cursor:pointer;font-size:11px;display:inline-flex;align-items:center;justify-content:center;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;}
-.cbtn-edit{background:#e3f2fd;color:#2196F3;}
-.cbtn-del{background:#ffebee;color:#f44336;}
-.cbtn:active{opacity:0.7;}
-.prices{display:flex;gap:4px;margin-bottom:4px;}
-.price-box{flex:1;background:#f5f5f5;padding:5px 6px;border-radius:5px;}
-.price-lbl{font-size:8px;color:#777;font-weight:bold;}
-.price-val{font-size:13px;font-weight:bold;color:#1a1a2e;}
-.price-val.sale{color:#4caf50;}
-.meta-row{display:flex;gap:3px;flex-wrap:wrap;}
-.meta-tag{font-size:8px;padding:2px 5px;border-radius:8px;font-weight:bold;display:inline-flex;align-items:center;gap:2px;}
-.tag-date{background:#fff9c4;color:#f57f17;}
-.tag-sup{background:#e3f2fd;color:#1565c0;}
-.tag-con{background:#eee;color:#666;}
-.profit-badge{position:absolute;top:6px;right:6px;font-size:8px;font-weight:bold;padding:2px 5px;border-radius:8px;background:#e8f5e9;color:#2e7d32;}
-.profit-badge.loss{background:#ffebee;color:#c62828;}
-.empty{text-align:center;padding:30px 10px;color:#999;}
-.empty-icon{font-size:40px;display:block;margin-bottom:6px;}
-.empty-title{font-size:14px;font-weight:bold;color:#777;}
-.empty-text{font-size:11px;color:#999;}
-.fab{position:fixed;bottom:16px;right:16px;width:44px;height:44px;border-radius:50%;background:#ff9800;color:#fff;border:none;font-size:22px;cursor:pointer;z-index:99;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(255,152,0,0.4);-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;}
-.fab:active{opacity:0.7;transform:scale(0.9);}
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:200;display:none;justify-content:center;align-items:flex-end;}
-.modal.on{display:flex;}
-.sheet{background:#fff;width:100%;max-height:80vh;border-radius:16px 16px 0 0;padding:14px 12px 20px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-.sheet-handle{width:30px;height:3px;background:#ccc;border-radius:2px;margin:0 auto 10px;}
-.sheet-title{font-size:15px;font-weight:bold;color:#1a1a2e;text-align:center;margin-bottom:10px;}
-.fgroup{margin-bottom:8px;}
-.fgroup label{display:block;font-size:10px;font-weight:bold;color:#555;margin-bottom:3px;}
-.fgroup label .req{color:#f44336;font-size:12px;}
-.fgroup input{width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;background:#fafafa;-webkit-appearance:none;-moz-appearance:none;appearance:none;}
-.fgroup input:focus{border-color:#ff9800;background:#fff;}
-.frow{display:flex;gap:4px;}
-.frow .fgroup{flex:1;margin-bottom:8px;}
-.btn-full{width:100%;padding:10px;border-radius:15px;border:none;font-weight:bold;font-size:13px;cursor:pointer;margin-bottom:4px;display:block;text-align:center;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;}
-.btn-full:active{opacity:0.7;transform:scale(0.97);}
-.save-btn{background:#ff9800;color:#fff;}
-.cancel-btn{background:#eee;color:#555;}
-.toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:8px 16px;border-radius:15px;font-size:11px;font-weight:bold;z-index:300;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
-.toast.show{opacity:1;}
-.toast.ok{background:#4caf50;}
-.toast.err{background:#f44336;}
-.toast.warn{background:#ff9800;}
-.alert-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:250;display:none;justify-content:center;align-items:center;}
-.alert-overlay.on{display:flex;}
-.alert-box{background:#fff;border-radius:12px;padding:18px;width:85%;max-width:280px;text-align:center;}
-.alert-icon{font-size:36px;margin-bottom:6px;display:block;}
-.alert-title{font-size:14px;font-weight:bold;color:#1a1a2e;margin-bottom:4px;}
-.alert-text{font-size:11px;color:#777;margin-bottom:12px;}
-.alert-btns{display:flex;gap:6px;}
-.alert-btns button{flex:1;padding:8px;border-radius:12px;border:none;font-weight:bold;font-size:11px;cursor:pointer;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;}
-.alert-yes{background:#f44336;color:#fff;}
-.alert-no{background:#eee;color:#555;}
-.sync-status{text-align:center;padding:3px;font-size:8px;color:#999;margin-top:2px;}
+body{background:#0f172a;font-family:'Segoe UI',Arial,sans-serif;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:0;margin:0;}
+.app{width:100%;max-width:768px;background:#f8fafc;min-height:100vh;display:flex;flex-direction:column;box-shadow:0 0 60px rgba(0,0,0,0.3);}
+.header{background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;padding:12px 16px;position:sticky;top:0;z-index:100;}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+.logo{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;}
+.logo-icon{font-size:22px;}
+.cloud-badge{display:flex;align-items:center;gap:6px;background:rgba(34,197,94,0.15);color:#4ade80;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:600;}
+.cloud-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.cloud-dot.off{background:#ef4444;animation:none;}
+.search-bar{display:flex;align-items:center;background:rgba(255,255,255,0.1);border-radius:24px;padding:3px 3px 3px 14px;border:1px solid rgba(255,255,255,0.12);}
+.search-bar span{color:rgba(255,255,255,0.5);font-size:13px;flex-shrink:0;}
+.search-bar input{flex:1;background:transparent;border:none;color:#fff;padding:9px 6px;font-size:13px;outline:none;width:100%;min-width:0;}
+.search-bar input::placeholder{color:rgba(255,255,255,0.35);font-size:12px;}
+.clr-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;width:26px;height:26px;border-radius:50%;font-size:10px;cursor:pointer;display:none;margin-right:4px;flex-shrink:0;}
+.clr-btn.show{display:flex;align-items:center;justify-content:center;}
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:90px;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 12px 8px;}
+.stat-card{background:#fff;border-radius:12px;padding:12px 8px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.05);border:1px solid #e2e8f0;}
+.stat-icon{font-size:20px;display:block;margin-bottom:4px;}
+.stat-val{font-size:18px;font-weight:800;color:#0f172a;display:block;line-height:1;}
+.stat-lbl{font-size:9px;color:#94a3b8;text-transform:uppercase;font-weight:600;letter-spacing:0.3px;}
+.actions-row{display:flex;gap:6px;padding:4px 12px 8px;flex-wrap:wrap;}
+.btn{padding:10px 14px;border-radius:20px;border:none;font-weight:600;font-size:11px;cursor:pointer;flex:1;min-width:70px;text-align:center;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:4px;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;transition:0.15s;}
+.btn:active{transform:scale(0.95);opacity:0.8;}
+.btn-accent{background:#f59e0b;color:#0f172a;}
+.btn-primary{background:#3b82f6;color:#fff;}
+.btn-danger{background:#fff;color:#ef4444;border:1.5px solid #fecaca;}
+.list-area{padding:0 12px;}
+.list-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding:0 4px;}
+.list-title{font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;}
+.list-badge{font-size:9px;color:#64748b;background:#e2e8f0;padding:3px 10px;border-radius:12px;font-weight:600;}
+.sync-line{text-align:center;padding:2px;font-size:9px;color:#94a3b8;margin-bottom:4px;}
+.entry-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,0.04);border:1px solid #e2e8f0;position:relative;transition:0.15s;}
+.entry-card:hover{border-color:#cbd5e1;}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.card-title{font-size:14px;font-weight:700;color:#0f172a;flex:1;padding-right:8px;word-break:break-word;}
+.card-actions{display:flex;gap:6px;flex-shrink:0;}
+.icon-btn{width:32px;height:32px;border-radius:8px;border:none;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;justify-content:center;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;transition:0.15s;}
+.icon-btn:active{transform:scale(0.88);}
+.btn-edit{background:#eff6ff;color:#3b82f6;}
+.btn-del{background:#fef2f2;color:#ef4444;}
+.prices-row{display:flex;gap:8px;margin-bottom:8px;}
+.price-box{flex:1;background:#f8fafc;padding:8px 10px;border-radius:8px;border:1px solid #f1f5f9;}
+.price-lbl{font-size:9px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;}
+.price-val{font-size:15px;font-weight:700;color:#0f172a;}
+.price-val.green{color:#10b981;}
+.tags-row{display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
+.tag{font-size:9px;padding:3px 8px;border-radius:10px;font-weight:500;display:inline-flex;align-items:center;gap:3px;}
+.tag-date{background:#fef3c7;color:#92400e;}
+.tag-sup{background:#ede9fe;color:#5b21b6;}
+.tag-con{background:#f1f5f9;color:#64748b;}
+.margin-badge{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;padding:3px 8px;border-radius:10px;background:#dcfce7;color:#15803d;}
+.margin-badge.loss{background:#fee2e2;color:#b91c1c;}
+.empty-state{text-align:center;padding:40px 16px;color:#94a3b8;}
+.empty-icon{font-size:48px;display:block;margin-bottom:10px;}
+.empty-title{font-size:15px;font-weight:700;color:#64748b;margin-bottom:4px;}
+.empty-text{font-size:12px;color:#94a3b8;}
+.fab-btn{position:fixed;bottom:20px;right:20px;width:52px;height:52px;border-radius:50%;background:#f59e0b;color:#0f172a;border:none;font-size:24px;cursor:pointer;z-index:99;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(245,158,11,0.4);-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;font-weight:bold;transition:0.2s;}
+.fab-btn:active{transform:scale(0.88);}
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:200;display:none;justify-content:center;align-items:flex-end;}
+.modal-overlay.on{display:flex;}
+.bottom-sheet{background:#fff;width:100%;max-width:768px;max-height:82vh;border-radius:20px 20px 0 0;padding:18px 16px 26px;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -4px 20px rgba(0,0,0,0.1);}
+.sheet-handle{width:38px;height:4px;background:#cbd5e1;border-radius:2px;margin:0 auto 14px;}
+.sheet-title{font-size:16px;font-weight:700;color:#0f172a;text-align:center;margin-bottom:14px;}
+.field{margin-bottom:10px;}
+.field label{display:block;font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;}
+.field label .req{color:#ef4444;}
+.field input{width:100%;padding:10px 12px;border:2px solid #e2e8f0;border-radius:8px;font-size:13px;outline:none;background:#f8fafc;transition:0.2s;-webkit-appearance:none;-moz-appearance:none;appearance:none;}
+.field input:focus{border-color:#f59e0b;background:#fff;box-shadow:0 0 0 3px rgba(245,158,11,0.1);}
+.row-fields{display:flex;gap:8px;}
+.row-fields .field{flex:1;margin-bottom:10px;}
+.btn-block{width:100%;padding:12px;border-radius:20px;border:none;font-weight:700;font-size:14px;cursor:pointer;margin-bottom:6px;display:block;text-align:center;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;transition:0.15s;}
+.btn-block:active{transform:scale(0.97);}
+.save-btn-block{background:#f59e0b;color:#0f172a;}
+.cancel-btn-block{background:#f1f5f9;color:#64748b;}
+.toast-pop{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 20px;border-radius:20px;font-size:12px;font-weight:600;z-index:300;opacity:0;transition:0.3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.2);}
+.toast-pop.show{opacity:1;}
+.toast-pop.ok{background:#10b981;}
+.toast-pop.err{background:#ef4444;}
+.toast-pop.warn{background:#f59e0b;color:#0f172a;}
+.confirm-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:250;display:none;justify-content:center;align-items:center;}
+.confirm-overlay.on{display:flex;}
+.confirm-box{background:#fff;border-radius:16px;padding:22px;width:88%;max-width:340px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.2);}
+.confirm-icon{font-size:44px;display:block;margin-bottom:10px;}
+.confirm-title{font-size:15px;font-weight:700;color:#0f172a;margin-bottom:4px;}
+.confirm-msg{font-size:12px;color:#64748b;margin-bottom:16px;}
+.confirm-btns{display:flex;gap:8px;}
+.confirm-btns button{flex:1;padding:10px;border-radius:16px;border:none;font-weight:700;font-size:12px;cursor:pointer;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;}
+.btn-yes{background:#ef4444;color:#fff;}
+.btn-no{background:#f1f5f9;color:#64748b;}
+
+@media (min-width:600px){
+  .stats-row{grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 16px 10px;}
+  .actions-row{padding:4px 16px 10px;}
+  .list-area{padding:0 16px;}
+  .entry-card{padding:16px;margin-bottom:10px;}
+  .btn{font-size:12px;padding:11px 16px;}
+  .card-title{font-size:15px;}
+  .price-val{font-size:16px;}
+  .header{padding:14px 20px;}
+  .bottom-sheet{padding:20px 20px 30px;}
+}
 </style>
 </head>
 <body>
 
 <div class="app">
 <div class="header">
-<div class="header-row">
-<div class="logo"><span class="logo-icon">&#127978;</span> ShopKeeper Pro</div>
-<div class="firebase-badge"><span class="dot" id="syncDot"></span> <span id="syncText">Firebase</span></div>
+<div class="header-top">
+<div class="logo"><span class="logo-icon">🏪</span> ShopKeeper Pro</div>
+<div class="cloud-badge"><span class="cloud-dot" id="syncDot"></span> <span id="syncLabel">Firebase Cloud</span></div>
 </div>
-<div class="search-wrap">
-<span style="color:rgba(255,255,255,0.4);font-size:11px;">&#128269;</span>
-<input type="text" id="searchInput" placeholder="Search products, suppliers..." autocomplete="off">
-<button class="search-clear-btn" id="clearSearch">X</button>
+<div class="search-bar">
+<span>🔍</span>
+<input type="text" id="searchInput" placeholder="Search products, suppliers, contacts..." autocomplete="off">
+<button class="clr-btn" id="clearSearch">✕</button>
 </div>
 </div>
 
 <div class="content">
-<div class="stats">
-<div class="stat-box"><span class="s-icon">&#128230;</span><span class="s-val" id="totalProducts">0</span><span class="s-lbl">Products</span></div>
-<div class="stat-box"><span class="s-icon">&#128666;</span><span class="s-val" id="totalSuppliers">0</span><span class="s-lbl">Suppliers</span></div>
-<div class="stat-box"><span class="s-icon">&#128203;</span><span class="s-val" id="totalEntries">0</span><span class="s-lbl">Entries</span></div>
+<div class="stats-row">
+<div class="stat-card"><span class="stat-icon">📦</span><span class="stat-val" id="totalProducts">0</span><span class="stat-lbl">Products</span></div>
+<div class="stat-card"><span class="stat-icon">🚚</span><span class="stat-val" id="totalSuppliers">0</span><span class="stat-lbl">Suppliers</span></div>
+<div class="stat-card"><span class="stat-icon">📋</span><span class="stat-val" id="totalEntries">0</span><span class="stat-lbl">Entries</span></div>
+<div class="stat-card"><span class="stat-icon">💰</span><span class="stat-val" id="totalMargin">₹0</span><span class="stat-lbl">Profit</span></div>
 </div>
 
-<div class="actions">
-<button class="btn btn-orange" id="btnAdd">+ Add Entry</button>
-<button class="btn btn-blue" id="btnExport">&#9654; Export</button>
-<button class="btn btn-red" id="btnReset">X Clear All</button>
+<div class="actions-row">
+<button class="btn btn-accent" id="btnAdd">➕ Add Entry</button>
+<button class="btn btn-primary" id="btnExport">📤 Export CSV</button>
+<button class="btn btn-danger" id="btnReset">🗑 Clear All</button>
 </div>
 
-<div class="list-section">
-<div class="list-header">
-<span class="list-title">&#128203; Inventory List</span>
-<span class="list-count" id="listCount">0</span>
+<div class="list-area">
+<div class="list-head">
+<span class="list-title">📋 All Entries (From Firebase Cloud)</span>
+<span class="list-badge" id="listCount">0 entries</span>
 </div>
-<div class="sync-status" id="syncStatus">Connecting to Firebase...</div>
+<div class="sync-line" id="syncStatus">Connecting to Firebase...</div>
 <div id="productList"></div>
 </div>
 </div>
 
-<button class="fab" id="fabAdd">+</button>
+<button class="fab-btn" id="fabAdd">+</button>
 </div>
 
-<div class="modal" id="entryModal">
-<div class="sheet" id="sheet">
+<div class="modal-overlay" id="entryModal">
+<div class="bottom-sheet" id="sheet">
 <div class="sheet-handle"></div>
 <div class="sheet-title" id="modalTitle">Add New Entry</div>
 
-<div class="fgroup">
+<div class="field">
 <label>Product Name <span class="req">*</span></label>
 <input type="text" id="fProductName" placeholder="e.g. Basmati Rice" autocomplete="off">
 </div>
 
-<div class="frow">
-<div class="fgroup">
+<div class="row-fields">
+<div class="field">
 <label>Cost Price (₹) <span class="req">*</span></label>
 <input type="number" id="fCostPrice" placeholder="0.00" step="0.01" min="0">
 </div>
-<div class="fgroup">
+<div class="field">
 <label>Sale Price (₹) <span class="req">*</span></label>
 <input type="number" id="fSalePrice" placeholder="0.00" step="0.01" min="0">
 </div>
 </div>
 
-<div class="fgroup">
+<div class="field">
 <label>Effective Date <span class="req">*</span></label>
 <input type="date" id="fDate">
 </div>
 
-<div class="fgroup">
+<div class="field">
 <label>Supplier Name</label>
 <input type="text" id="fSupplier" placeholder="e.g. ABC Traders" autocomplete="off">
 </div>
 
-<div class="fgroup">
+<div class="field">
 <label>Contact Number</label>
 <input type="tel" id="fContact" placeholder="Phone or email" autocomplete="off">
 </div>
 
 <input type="hidden" id="fEditId" value="">
 
-<button class="btn-full save-btn" id="btnSave">&#128190; Save to Firebase</button>
-<button class="btn-full cancel-btn" id="btnCancel">Cancel</button>
+<button class="btn-block save-btn-block" id="btnSave">💾 Save to Firebase Cloud</button>
+<button class="btn-block cancel-btn-block" id="btnCancel">Cancel</button>
 </div>
 </div>
 
-<div class="alert-overlay" id="alertDialog">
-<div class="alert-box">
-<span class="alert-icon" id="alertIcon">&#9888;</span>
-<div class="alert-title" id="alertTitle">Confirm</div>
-<div class="alert-text" id="alertText">Are you sure?</div>
-<div class="alert-btns">
-<button class="alert-no" id="alertNo">Cancel</button>
-<button class="alert-yes" id="alertYes">Delete</button>
+<div class="confirm-overlay" id="alertDialog">
+<div class="confirm-box">
+<span class="confirm-icon" id="alertIcon">⚠️</span>
+<div class="confirm-title" id="alertTitle">Confirm</div>
+<div class="confirm-msg" id="alertText">Are you sure?</div>
+<div class="confirm-btns">
+<button class="btn-no" id="alertNo">Cancel</button>
+<button class="btn-yes" id="alertYes">Delete</button>
 </div>
 </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast-pop" id="toast"></div>
 
-<!-- Firebase Compat SDK (v8 style) - ONLY USE ONE VERSION -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js">
 </script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js">
 </script>
 
 <script>
-// ==================== FIREBASE CONFIG - USING YOUR CREDENTIALS ====================
+// Firebase Config - Your Project
 var firebaseConfig = {
   apiKey: "AIzaSyDIfpVbV3K7G7aMQSKI09dcxS1uf1IGf74",
   authDomain: "al-noor-karyana-28699.firebaseapp.com",
@@ -211,20 +227,13 @@ var firebaseConfig = {
   measurementId: "G-1RSTMHM6FV"
 };
 
-// Initialize Firebase - ONLY ONCE
 firebase.initializeApp(firebaseConfig);
 var db = firebase.firestore();
 
-// Enable offline persistence
-db.enablePersistence({ synchronizeTabs: true })
-  .then(function() {
-    console.log('Firebase offline persistence enabled');
-  })
-  .catch(function(err) {
-    console.log('Persistence setting:', err.code);
-  });
+db.enablePersistence({ synchronizeTabs: true }).catch(function(err) {
+  console.log('Persistence:', err.code);
+});
 
-// ==================== APP LOGIC ====================
 (function() {
   'use strict';
 
@@ -234,7 +243,6 @@ db.enablePersistence({ synchronizeTabs: true })
   var toastTimer = null;
   var unsubscribe = null;
 
-  // ========== GET ELEMENTS ==========
   function g(id) { return document.getElementById(id); }
 
   var searchInput = g('searchInput');
@@ -243,6 +251,7 @@ db.enablePersistence({ synchronizeTabs: true })
   var totalProducts = g('totalProducts');
   var totalSuppliers = g('totalSuppliers');
   var totalEntries = g('totalEntries');
+  var totalMargin = g('totalMargin');
   var listCount = g('listCount');
   var entryModal = g('entryModal');
   var sheet = g('sheet');
@@ -260,10 +269,9 @@ db.enablePersistence({ synchronizeTabs: true })
   var alertText = g('alertText');
   var toast = g('toast');
   var syncDot = g('syncDot');
-  var syncText = g('syncText');
+  var syncLabel = g('syncLabel');
   var syncStatus = g('syncStatus');
 
-  // ========== UTILITIES ==========
   function today() {
     var d = new Date();
     var m = d.getMonth() + 1;
@@ -280,50 +288,40 @@ db.enablePersistence({ synchronizeTabs: true })
   function esc(s) {
     if (!s) return '-';
     s = String(s);
-    s = s.replace(/&/g, '&amp;');
-    s = s.replace(/</g, '&lt;');
-    s = s.replace(/>/g, '&gt;');
-    s = s.replace(/"/g, '&quot;');
+    s = s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     return s;
   }
 
-  // ========== TOAST ==========
   function showToast(msg, type) {
     type = type || 'ok';
     if (toastTimer) clearTimeout(toastTimer);
     toast.textContent = msg;
-    toast.className = 'toast ' + type + ' show';
-    toastTimer = setTimeout(function() {
-      toast.className = 'toast';
-    }, 2000);
+    toast.className = 'toast-pop ' + type + ' show';
+    toastTimer = setTimeout(function() { toast.className = 'toast-pop'; }, 2200);
   }
 
-  // ========== ALERT ==========
   function showAlert(title, text, icon, cb) {
-    alertIcon.textContent = icon || '!';
+    alertIcon.textContent = icon || '⚠️';
     alertTitle.textContent = title;
     alertText.textContent = text;
-    alertDialog.className = 'alert-overlay on';
+    alertDialog.className = 'confirm-overlay on';
     alertCallback = cb;
   }
 
   function hideAlert() {
-    alertDialog.className = 'alert-overlay';
+    alertDialog.className = 'confirm-overlay';
     alertCallback = null;
   }
 
-  // ========== MODAL ==========
   function openModal(title) {
     modalTitle.textContent = title || 'Add New Entry';
-    entryModal.className = 'modal on';
+    entryModal.className = 'modal-overlay on';
     document.body.style.overflow = 'hidden';
-    setTimeout(function() {
-      if (fProductName) fProductName.focus();
-    }, 300);
+    setTimeout(function() { if (fProductName) fProductName.focus(); }, 300);
   }
 
   function closeModal() {
-    entryModal.className = 'modal';
+    entryModal.className = 'modal-overlay';
     document.body.style.overflow = '';
     clearForm();
   }
@@ -338,105 +336,109 @@ db.enablePersistence({ synchronizeTabs: true })
     fEditId.value = '';
   }
 
-  // ========== FIREBASE SYNC STATUS ==========
-  function updateSyncStatus(online) {
+  function updateSync(online) {
     if (online) {
-      syncDot.className = 'dot';
-      syncText.textContent = 'Online';
-      syncStatus.textContent = 'Synced with Firebase';
-      syncStatus.style.color = '#4caf50';
+      syncDot.className = 'cloud-dot';
+      syncLabel.textContent = 'Cloud Online';
+      syncStatus.textContent = '✅ Showing all entries from Firebase Cloud';
+      syncStatus.style.color = '#10b981';
     } else {
-      syncDot.className = 'dot off';
-      syncText.textContent = 'Offline';
-      syncStatus.textContent = 'Will sync when online';
-      syncStatus.style.color = '#f44336';
+      syncDot.className = 'cloud-dot off';
+      syncLabel.textContent = 'Offline';
+      syncStatus.textContent = '📴 Showing cached data (syncs when online)';
+      syncStatus.style.color = '#ef4444';
     }
   }
 
-  // ========== FIREBASE OPERATIONS ==========
-  function getEntriesRef() {
+  function ref() {
     return db.collection('shared').doc('inventory').collection('entries');
   }
 
-  function setupRealtimeListener() {
-    if (unsubscribe) {
-      unsubscribe();
-    }
+  function setupListener() {
+    if (unsubscribe) unsubscribe();
 
-    var ref = getEntriesRef().orderBy('productName').orderBy('date', 'desc');
+    var q = ref().orderBy('productName').orderBy('date', 'desc');
 
-    unsubscribe = ref.onSnapshot(
-      function(snapshot) {
-        var fireEntries = [];
-        snapshot.forEach(function(doc) {
-          var data = doc.data();
-          data.id = doc.id;
-          fireEntries.push(data);
+    // First load - show all entries immediately
+    q.get().then(function(snap) {
+      var list = [];
+      snap.forEach(function(doc) {
+        var d = doc.data();
+        d.id = doc.id;
+        list.push(d);
+      });
+      entries = list;
+      render();
+    }).catch(function(err) {
+      console.log('Initial load error:', err.message);
+    });
+
+    // Real-time listener
+    unsubscribe = q.onSnapshot(
+      function(snap) {
+        var list = [];
+        snap.forEach(function(doc) {
+          var d = doc.data();
+          d.id = doc.id;
+          list.push(d);
         });
-        entries = fireEntries;
-        updateSyncStatus(true);
+        entries = list;
+        updateSync(true);
         render();
       },
-      function(error) {
-        console.log('Listener error:', error.message);
-        updateSyncStatus(false);
+      function(err) {
+        console.log('Snapshot error:', err.message);
+        updateSync(false);
+        render();
       }
     );
   }
 
-  function addToFirebase(entry) {
-    var ref = getEntriesRef();
-    var data = {
-      productName: entry.productName,
-      cost: entry.cost,
-      sale: entry.sale,
-      date: entry.date,
-      supplier: entry.supplier || '',
-      contact: entry.contact || '',
+  function addEntry(data) {
+    return ref().add({
+      productName: data.productName,
+      cost: data.cost,
+      sale: data.sale,
+      date: data.date,
+      supplier: data.supplier || '',
+      contact: data.contact || '',
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-    return ref.add(data);
+    });
   }
 
-  function updateInFirebase(id, entry) {
-    var ref = getEntriesRef().doc(id);
-    var data = {
-      productName: entry.productName,
-      cost: entry.cost,
-      sale: entry.sale,
-      date: entry.date,
-      supplier: entry.supplier || '',
-      contact: entry.contact || '',
+  function updateEntry(id, data) {
+    return ref().doc(id).update({
+      productName: data.productName,
+      cost: data.cost,
+      sale: data.sale,
+      date: data.date,
+      supplier: data.supplier || '',
+      contact: data.contact || '',
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-    return ref.update(data);
+    });
   }
 
-  function deleteFromFirebase(id) {
-    return getEntriesRef().doc(id).delete();
+  function deleteEntry(id) {
+    return ref().doc(id).delete();
   }
 
-  function clearAllFirebase() {
-    var ref = getEntriesRef();
-    return ref.get().then(function(snapshot) {
+  function clearAll() {
+    return ref().get().then(function(snap) {
       var batch = db.batch();
-      snapshot.forEach(function(doc) {
-        batch.delete(doc.ref);
-      });
+      snap.forEach(function(doc) { batch.delete(doc.ref); });
       return batch.commit();
     });
   }
 
-  // ========== RENDER ==========
   function render() {
-    var filter = currentFilter.toLowerCase();
+    var f = currentFilter.toLowerCase();
     var filtered = [];
     for (var i = 0; i < entries.length; i++) {
       var e = entries[i];
-      if (!filter ||
-        (e.productName && e.productName.toLowerCase().indexOf(filter) !== -1) ||
-        (e.supplier && e.supplier.toLowerCase().indexOf(filter) !== -1) ||
-        (e.contact && e.contact.toLowerCase().indexOf(filter) !== -1)) {
+      if (!f ||
+        (e.productName && e.productName.toLowerCase().indexOf(f) !== -1) ||
+        (e.supplier && e.supplier.toLowerCase().indexOf(f) !== -1) ||
+        (e.contact && e.contact.toLowerCase().indexOf(f) !== -1)) {
         filtered.push(e);
       }
     }
@@ -452,9 +454,11 @@ db.enablePersistence({ synchronizeTabs: true })
     listCount.textContent = filtered.length + ' entries';
 
     if (filtered.length === 0) {
-      productList.innerHTML = '<div class="empty"><span class="empty-icon">&#128232;</span><div class="empty-title">' +
-        (filter ? 'No matches' : 'No entries') +
-        '</div><div class="empty-text">Tap + to add to Firebase</div></div>';
+      productList.innerHTML = '<div class="empty-state"><span class="empty-icon">📭</span><div class="empty-title">' +
+        (f ? 'No matching results' : 'No entries yet') +
+        '</div><div class="empty-text">' +
+        (f ? 'Try different search terms' : 'Tap + to add your first product to Firebase Cloud') +
+        '</div></div>';
     } else {
       var html = '';
       for (var j = 0; j < filtered.length; j++) {
@@ -463,30 +467,29 @@ db.enablePersistence({ synchronizeTabs: true })
         var mp = (entry.cost || 0) > 0 ? ((margin / entry.cost) * 100).toFixed(1) : 0;
         var isProfit = margin >= 0;
 
-        html += '<div class="card">';
+        html += '<div class="entry-card">';
         if (margin !== 0) {
-          html += '<div class="profit-badge' + (isProfit ? '' : ' loss') + '">' +
-            (isProfit ? '+' : '') + mp + '%</div>';
+          html += '<div class="margin-badge' + (isProfit ? '' : ' loss') + '">' +
+            (isProfit ? '📈 +' : '📉 ') + mp + '%</div>';
         }
-        html += '<div class="card-top">';
-        html += '<div class="card-name">' + esc(entry.productName) + '</div>';
-        html += '<div class="card-btns">';
-        html += '<button class="cbtn cbtn-edit" data-eid="' + entry.id + '">✏</button>';
-        html += '<button class="cbtn cbtn-del" data-did="' + entry.id + '">🗑</button>';
+        html += '<div class="card-header">';
+        html += '<div class="card-title">' + esc(entry.productName) + '</div>';
+        html += '<div class="card-actions">';
+        html += '<button class="icon-btn btn-edit" data-eid="' + entry.id + '">✏️</button>';
+        html += '<button class="icon-btn btn-del" data-did="' + entry.id + '">🗑️</button>';
         html += '</div></div>';
-        html += '<div class="prices">';
-        html += '<div class="price-box"><div class="price-lbl">COST</div><div class="price-val">₹' + Number(entry.cost || 0).toFixed(2) + '</div></div>';
-        html += '<div class="price-box"><div class="price-lbl">SALE</div><div class="price-val sale">₹' + Number(entry.sale || 0).toFixed(2) + '</div></div>';
+        html += '<div class="prices-row">';
+        html += '<div class="price-box"><div class="price-lbl">Cost Price</div><div class="price-val">₹' + Number(entry.cost || 0).toFixed(2) + '</div></div>';
+        html += '<div class="price-box"><div class="price-lbl">Sale Price</div><div class="price-val green">₹' + Number(entry.sale || 0).toFixed(2) + '</div></div>';
         html += '</div>';
-        html += '<div class="meta-row">';
-        html += '<span class="meta-tag tag-date">📅 ' + formatDate(entry.date) + '</span>';
-        if (entry.supplier) html += '<span class="meta-tag tag-sup">🚚 ' + esc(entry.supplier) + '</span>';
-        if (entry.contact) html += '<span class="meta-tag tag-con">📞 ' + esc(entry.contact) + '</span>';
+        html += '<div class="tags-row">';
+        html += '<span class="tag tag-date">📅 ' + formatDate(entry.date) + '</span>';
+        if (entry.supplier) html += '<span class="tag tag-sup">🚚 ' + esc(entry.supplier) + '</span>';
+        if (entry.contact) html += '<span class="tag tag-con">📞 ' + esc(entry.contact) + '</span>';
         html += '</div></div>';
       }
       productList.innerHTML = html;
 
-      // Bind buttons
       var editBtns = productList.querySelectorAll('[data-eid]');
       for (var k = 0; k < editBtns.length; k++) {
         (function(id) {
@@ -510,18 +513,20 @@ db.enablePersistence({ synchronizeTabs: true })
       }
     }
 
-    var up = {};
-    var us = {};
+    var up = {}, us = {}, totalM = 0;
     for (var n = 0; n < entries.length; n++) {
       if (entries[n].productName) up[entries[n].productName] = true;
       if (entries[n].supplier) us[entries[n].supplier] = true;
+      totalM += ((entries[n].sale || 0) - (entries[n].cost || 0));
     }
     totalProducts.textContent = Object.keys(up).length;
     totalSuppliers.textContent = Object.keys(us).length;
     totalEntries.textContent = entries.length;
+    totalMargin.textContent = '₹' + totalM.toFixed(2);
+    if (totalM >= 0) totalMargin.style.color = '#10b981';
+    else totalMargin.style.color = '#ef4444';
   }
 
-  // ========== CRUD ==========
   function handleEdit(id) {
     for (var i = 0; i < entries.length; i++) {
       if (entries[i].id === id) {
@@ -546,10 +551,10 @@ db.enablePersistence({ synchronizeTabs: true })
     }
     if (!entry) return;
 
-    showAlert('Delete', 'Delete "' + entry.productName + '"?', '🗑', function() {
-      deleteFromFirebase(id).then(function() {
+    showAlert('Delete Entry', 'Remove "' + entry.productName + '" from Firebase Cloud?', '🗑️', function() {
+      deleteEntry(id).then(function() {
         if (fEditId.value === id) closeModal();
-        showToast('Deleted!', 'err');
+        showToast('Deleted from cloud!', 'err');
       }).catch(function(err) {
         showToast('Error: ' + err.message, 'err');
       });
@@ -566,30 +571,23 @@ db.enablePersistence({ synchronizeTabs: true })
     var eid = fEditId.value;
 
     if (!pn) { showToast('Enter product name', 'warn'); return; }
-    if (isNaN(cost) || cost < 0) { showToast('Valid cost needed', 'warn'); return; }
-    if (isNaN(sale) || sale < 0) { showToast('Valid sale needed', 'warn'); return; }
+    if (isNaN(cost) || cost < 0) { showToast('Valid cost required', 'warn'); return; }
+    if (isNaN(sale) || sale < 0) { showToast('Valid sale required', 'warn'); return; }
     if (!date) { showToast('Select date', 'warn'); return; }
 
-    var entryData = {
-      productName: pn,
-      cost: cost,
-      sale: sale,
-      date: date,
-      supplier: sup,
-      contact: con
-    };
+    var data = { productName: pn, cost: cost, sale: sale, date: date, supplier: sup, contact: con };
 
     if (eid) {
-      updateInFirebase(eid, entryData).then(function() {
+      updateEntry(eid, data).then(function() {
         closeModal();
-        showToast('Updated!', 'ok');
+        showToast('Updated in Firebase!', 'ok');
       }).catch(function(err) {
         showToast('Error: ' + err.message, 'err');
       });
     } else {
-      addToFirebase(entryData).then(function() {
+      addEntry(data).then(function() {
         closeModal();
-        showToast('Saved to Firebase!', 'ok');
+        showToast('Saved to Firebase Cloud!', 'ok');
       }).catch(function(err) {
         showToast('Error: ' + err.message, 'err');
       });
@@ -597,9 +595,9 @@ db.enablePersistence({ synchronizeTabs: true })
   }
 
   function handleReset() {
-    showAlert('Clear All', 'Delete ALL from cloud?', '⚠', function() {
-      clearAllFirebase().then(function() {
-        showToast('All cleared!', 'err');
+    showAlert('Clear All Data', 'Delete ALL entries from Firebase Cloud? This is irreversible!', '⚠️', function() {
+      clearAll().then(function() {
+        showToast('All cloud data cleared!', 'err');
       }).catch(function(err) {
         showToast('Error: ' + err.message, 'err');
       });
@@ -611,22 +609,18 @@ db.enablePersistence({ synchronizeTabs: true })
     var csv = 'Product,Cost,Sale,Margin,Date,Supplier,Contact\n';
     for (var i = 0; i < entries.length; i++) {
       var e = entries[i];
-      var margin = ((e.sale || 0) - (e.cost || 0)).toFixed(2);
-      csv += '"' + (e.productName || '') + '","' + (e.cost || 0) + '","' + (e.sale || 0) + '","' + margin + '","' + (e.date || '') + '","' + (e.supplier || '') + '","' + (e.contact || '') + '"\n';
+      var m = ((e.sale || 0) - (e.cost || 0)).toFixed(2);
+      csv += '"' + (e.productName || '') + '","' + (e.cost || 0) + '","' + (e.sale || 0) + '","' + m + '","' + (e.date || '') + '","' + (e.supplier || '') + '","' + (e.contact || '') + '"\n';
     }
     var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
-    a.href = url;
-    a.download = 'export-' + today() + '.csv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    a.href = url; a.download = 'firebase-export-' + today() + '.csv';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    showToast('Exported!', 'ok');
+    showToast('CSV exported!', 'ok');
   }
 
-  // ========== EVENT BINDING ==========
   g('fabAdd').onclick = function() { clearForm(); openModal(); };
   g('btnAdd').onclick = function() { clearForm(); openModal(); };
   g('btnSave').onclick = handleSave;
@@ -635,43 +629,34 @@ db.enablePersistence({ synchronizeTabs: true })
   g('btnExport').onclick = handleExport;
   g('alertYes').onclick = function() { if (alertCallback) alertCallback(); hideAlert(); };
   g('alertNo').onclick = hideAlert;
-
   entryModal.onclick = function(e) { if (e.target === entryModal) closeModal(); };
   alertDialog.onclick = function(e) { if (e.target === alertDialog) hideAlert(); };
 
   searchInput.oninput = function() {
     currentFilter = searchInput.value;
-    clearSearch.style.display = currentFilter ? 'inline-block' : 'none';
+    clearSearch.className = currentFilter ? 'clr-btn show' : 'clr-btn';
     render();
   };
   clearSearch.onclick = function() {
     searchInput.value = '';
     currentFilter = '';
-    clearSearch.style.display = 'none';
+    clearSearch.className = 'clr-btn';
     render();
   };
 
-  // Touch swipe
-  var touchY = 0;
-  sheet.addEventListener('touchstart', function(e) { touchY = e.touches[0].clientY; }, false);
+  var tY = 0;
+  sheet.addEventListener('touchstart', function(e) { tY = e.touches[0].clientY; }, false);
   sheet.addEventListener('touchmove', function(e) {
-    if (e.touches[0].clientY - touchY > 50 && sheet.scrollTop <= 5) closeModal();
+    if (e.touches[0].clientY - tY > 50 && sheet.scrollTop <= 5) closeModal();
   }, false);
 
-  window.addEventListener('online', function() {
-    updateSyncStatus(true);
-    setupRealtimeListener();
-  });
-  window.addEventListener('offline', function() { updateSyncStatus(false); });
+  window.addEventListener('online', function() { updateSync(true); });
+  window.addEventListener('offline', function() { updateSync(false); });
+  if (navigator.onLine) updateSync(true); else updateSync(false);
 
-  if (navigator.onLine) updateSyncStatus(true);
-  else updateSyncStatus(false);
-
-  // ========== INIT ==========
   g('fDate').value = today();
-  setupRealtimeListener();
+  setupListener();
 })();
 </script>
-
 </body>
 </html>
