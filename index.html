@@ -1,661 +1,798 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-<title>ShopKeeper Pro • Firebase Cloud</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0f172a;font-family:'Segoe UI',Arial,sans-serif;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:0;margin:0;}
-.app{width:100%;max-width:768px;background:#f8fafc;min-height:100vh;display:flex;flex-direction:column;box-shadow:0 0 60px rgba(0,0,0,0.3);}
-.header{background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;padding:12px 16px;position:sticky;top:0;z-index:100;}
-.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
-.logo{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;}
-.logo-icon{font-size:22px;}
-.cloud-badge{display:flex;align-items:center;gap:6px;background:rgba(34,197,94,0.15);color:#4ade80;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:600;}
-.cloud-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-.cloud-dot.off{background:#ef4444;animation:none;}
-.search-bar{display:flex;align-items:center;background:rgba(255,255,255,0.1);border-radius:24px;padding:3px 3px 3px 14px;border:1px solid rgba(255,255,255,0.12);}
-.search-bar span{color:rgba(255,255,255,0.5);font-size:13px;flex-shrink:0;}
-.search-bar input{flex:1;background:transparent;border:none;color:#fff;padding:9px 6px;font-size:13px;outline:none;width:100%;min-width:0;}
-.search-bar input::placeholder{color:rgba(255,255,255,0.35);font-size:12px;}
-.clr-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;width:26px;height:26px;border-radius:50%;font-size:10px;cursor:pointer;display:none;margin-right:4px;flex-shrink:0;}
-.clr-btn.show{display:flex;align-items:center;justify-content:center;}
-.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:90px;}
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 12px 8px;}
-.stat-card{background:#fff;border-radius:12px;padding:12px 8px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.05);border:1px solid #e2e8f0;}
-.stat-icon{font-size:20px;display:block;margin-bottom:4px;}
-.stat-val{font-size:18px;font-weight:800;color:#0f172a;display:block;line-height:1;}
-.stat-lbl{font-size:9px;color:#94a3b8;text-transform:uppercase;font-weight:600;letter-spacing:0.3px;}
-.actions-row{display:flex;gap:6px;padding:4px 12px 8px;flex-wrap:wrap;}
-.btn{padding:10px 14px;border-radius:20px;border:none;font-weight:600;font-size:11px;cursor:pointer;flex:1;min-width:70px;text-align:center;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:4px;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;transition:0.15s;}
-.btn:active{transform:scale(0.95);opacity:0.8;}
-.btn-accent{background:#f59e0b;color:#0f172a;}
-.btn-primary{background:#3b82f6;color:#fff;}
-.btn-danger{background:#fff;color:#ef4444;border:1.5px solid #fecaca;}
-.list-area{padding:0 12px;}
-.list-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding:0 4px;}
-.list-title{font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;}
-.list-badge{font-size:9px;color:#64748b;background:#e2e8f0;padding:3px 10px;border-radius:12px;font-weight:600;}
-.sync-line{text-align:center;padding:2px;font-size:9px;color:#94a3b8;margin-bottom:4px;}
-.entry-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,0.04);border:1px solid #e2e8f0;position:relative;transition:0.15s;}
-.entry-card:hover{border-color:#cbd5e1;}
-.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
-.card-title{font-size:14px;font-weight:700;color:#0f172a;flex:1;padding-right:8px;word-break:break-word;}
-.card-actions{display:flex;gap:6px;flex-shrink:0;}
-.icon-btn{width:32px;height:32px;border-radius:8px;border:none;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;justify-content:center;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;transition:0.15s;}
-.icon-btn:active{transform:scale(0.88);}
-.btn-edit{background:#eff6ff;color:#3b82f6;}
-.btn-del{background:#fef2f2;color:#ef4444;}
-.prices-row{display:flex;gap:8px;margin-bottom:8px;}
-.price-box{flex:1;background:#f8fafc;padding:8px 10px;border-radius:8px;border:1px solid #f1f5f9;}
-.price-lbl{font-size:9px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;}
-.price-val{font-size:15px;font-weight:700;color:#0f172a;}
-.price-val.green{color:#10b981;}
-.tags-row{display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
-.tag{font-size:9px;padding:3px 8px;border-radius:10px;font-weight:500;display:inline-flex;align-items:center;gap:3px;}
-.tag-date{background:#fef3c7;color:#92400e;}
-.tag-sup{background:#ede9fe;color:#5b21b6;}
-.tag-con{background:#f1f5f9;color:#64748b;}
-.margin-badge{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;padding:3px 8px;border-radius:10px;background:#dcfce7;color:#15803d;}
-.margin-badge.loss{background:#fee2e2;color:#b91c1c;}
-.empty-state{text-align:center;padding:40px 16px;color:#94a3b8;}
-.empty-icon{font-size:48px;display:block;margin-bottom:10px;}
-.empty-title{font-size:15px;font-weight:700;color:#64748b;margin-bottom:4px;}
-.empty-text{font-size:12px;color:#94a3b8;}
-.fab-btn{position:fixed;bottom:20px;right:20px;width:52px;height:52px;border-radius:50%;background:#f59e0b;color:#0f172a;border:none;font-size:24px;cursor:pointer;z-index:99;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(245,158,11,0.4);-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;font-weight:bold;transition:0.2s;}
-.fab-btn:active{transform:scale(0.88);}
-.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:200;display:none;justify-content:center;align-items:flex-end;}
-.modal-overlay.on{display:flex;}
-.bottom-sheet{background:#fff;width:100%;max-width:768px;max-height:82vh;border-radius:20px 20px 0 0;padding:18px 16px 26px;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -4px 20px rgba(0,0,0,0.1);}
-.sheet-handle{width:38px;height:4px;background:#cbd5e1;border-radius:2px;margin:0 auto 14px;}
-.sheet-title{font-size:16px;font-weight:700;color:#0f172a;text-align:center;margin-bottom:14px;}
-.field{margin-bottom:10px;}
-.field label{display:block;font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;}
-.field label .req{color:#ef4444;}
-.field input{width:100%;padding:10px 12px;border:2px solid #e2e8f0;border-radius:8px;font-size:13px;outline:none;background:#f8fafc;transition:0.2s;-webkit-appearance:none;-moz-appearance:none;appearance:none;}
-.field input:focus{border-color:#f59e0b;background:#fff;box-shadow:0 0 0 3px rgba(245,158,11,0.1);}
-.row-fields{display:flex;gap:8px;}
-.row-fields .field{flex:1;margin-bottom:10px;}
-.btn-block{width:100%;padding:12px;border-radius:20px;border:none;font-weight:700;font-size:14px;cursor:pointer;margin-bottom:6px;display:block;text-align:center;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;transition:0.15s;}
-.btn-block:active{transform:scale(0.97);}
-.save-btn-block{background:#f59e0b;color:#0f172a;}
-.cancel-btn-block{background:#f1f5f9;color:#64748b;}
-.toast-pop{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 20px;border-radius:20px;font-size:12px;font-weight:600;z-index:300;opacity:0;transition:0.3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.2);}
-.toast-pop.show{opacity:1;}
-.toast-pop.ok{background:#10b981;}
-.toast-pop.err{background:#ef4444;}
-.toast-pop.warn{background:#f59e0b;color:#0f172a;}
-.confirm-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:250;display:none;justify-content:center;align-items:center;}
-.confirm-overlay.on{display:flex;}
-.confirm-box{background:#fff;border-radius:16px;padding:22px;width:88%;max-width:340px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.2);}
-.confirm-icon{font-size:44px;display:block;margin-bottom:10px;}
-.confirm-title{font-size:15px;font-weight:700;color:#0f172a;margin-bottom:4px;}
-.confirm-msg{font-size:12px;color:#64748b;margin-bottom:16px;}
-.confirm-btns{display:flex;gap:8px;}
-.confirm-btns button{flex:1;padding:10px;border-radius:16px;border:none;font-weight:700;font-size:12px;cursor:pointer;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none;}
-.btn-yes{background:#ef4444;color:#fff;}
-.btn-no{background:#f1f5f9;color:#64748b;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#0F172A">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Inventory Calc • Made by SARR Inc</title>
+    <style>
+        :root {
+            --bg: #0F172A;
+            --surface: #1E293B;
+            --surface-light: #334155;
+            --text: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --accent: #F59E0B;
+            --accent-dark: #D97706;
+            --success: #10B981;
+            --danger: #EF4444;
+            --blue: #3B82F6;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
 
-@media (min-width:600px){
-  .stats-row{grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 16px 10px;}
-  .actions-row{padding:4px 16px 10px;}
-  .list-area{padding:0 16px;}
-  .entry-card{padding:16px;margin-bottom:10px;}
-  .btn{font-size:12px;padding:11px 16px;}
-  .card-title{font-size:15px;}
-  .price-val{font-size:16px;}
-  .header{padding:14px 20px;}
-  .bottom-sheet{padding:20px 20px 30px;}
-}
-</style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        input {
+            -webkit-user-select: text;
+            user-select: text;
+            font-family: var(--font);
+        }
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        body {
+            background: #000;
+            font-family: var(--font);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .phone-frame {
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            max-height: 900px;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(245,158,11,0.15);
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px 0;
+            color: var(--text);
+            font-size: 11px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .status-right {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .header {
+            padding: 16px 20px 12px;
+            flex-shrink: 0;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .logo {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.5px;
+        }
+        .logo span {
+            color: var(--accent);
+        }
+        .company-name {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: #000;
+        }
+
+        .search-wrap {
+            display: flex;
+            align-items: center;
+            background: var(--surface);
+            border-radius: 14px;
+            padding: 4px 4px 4px 14px;
+            border: 1px solid var(--surface-light);
+        }
+        .search-wrap svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--text-secondary);
+            fill: none;
+            flex-shrink: 0;
+        }
+        .search-wrap input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            padding: 10px 8px;
+            font-size: 14px;
+            outline: none;
+            width: 100%;
+        }
+        .search-wrap input::placeholder {
+            color: var(--text-secondary);
+        }
+        .search-clear {
+            background: var(--surface-light);
+            border: none;
+            color: var(--text);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .search-clear.show {
+            display: flex;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 0 16px 100px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .stat-card {
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 12px 6px;
+            text-align: center;
+            border: 1px solid var(--surface-light);
+        }
+        .stat-card .val {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .stat-card .lbl {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-top: 2px;
+            letter-spacing: 0.3px;
+        }
+        .stat-card .val.green { color: var(--success); }
+        .stat-card .val.red { color: var(--danger); }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .section-title h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .section-title .count {
+            font-size: 11px;
+            color: var(--text-secondary);
+            background: var(--surface);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 10px;
+            border: 1px solid var(--surface-light);
+            animation: fadeUp 0.3s ease;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .card-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            flex: 1;
+            padding-right: 8px;
+        }
+        .card-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            transition: 0.15s;
+        }
+        .icon-btn:active { transform: scale(0.9); }
+        .btn-edit { background: rgba(59,130,246,0.15); color: var(--blue); }
+        .btn-del { background: rgba(239,68,68,0.15); color: var(--danger); }
+
+        .price-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .price-item {
+            flex: 1;
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            border: 1px solid var(--surface-light);
+        }
+        .price-item .lbl {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .price-item .val {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .price-item .val.green { color: var(--success); }
+
+        .meta-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .tag {
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-weight: 500;
+            background: var(--surface-light);
+            color: var(--text-secondary);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+        .empty h4 {
+            font-size: 16px;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .empty p {
+            font-size: 12px;
+        }
+
+        .fab {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            font-size: 26px;
+            cursor: pointer;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 30px rgba(245,158,11,0.4);
+            transition: 0.2s;
+            font-weight: 300;
+        }
+        .fab:active {
+            transform: scale(0.9);
+            box-shadow: 0 4px 15px rgba(245,158,11,0.3);
+        }
+
+        .modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 100;
+            display: none;
+            justify-content: flex-end;
+            flex-direction: column;
+        }
+        .modal.open {
+            display: flex;
+        }
+        .sheet {
+            background: var(--surface);
+            border-radius: 24px 24px 0 0;
+            padding: 20px 18px 30px;
+            max-height: 85%;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--surface-light);
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+        .sheet h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text);
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--surface-light);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text);
+            outline: none;
+        }
+        .form-group input:focus {
+            border-color: var(--accent);
+        }
+        .form-row {
+            display: flex;
+            gap: 8px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .btn-full {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+        .btn-save {
+            background: var(--accent);
+            color: #000;
+        }
+        .btn-cancel {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--surface-light);
+            margin-top: 8px;
+        }
+
+        .toast {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--surface);
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 200;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+        .toast.success {
+            background: var(--success);
+            color: #000;
+        }
+        .toast.error {
+            background: var(--danger);
+        }
+
+        .footer-brand {
+            text-align: center;
+            padding: 10px 8px;
+            font-size: 10px;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            border-top: 1px solid var(--surface-light);
+            letter-spacing: 0.3px;
+            font-weight: 500;
+        }
+        .footer-brand strong {
+            color: var(--accent);
+            font-weight: 700;
+        }
+    </style>
 </head>
 <body>
 
-<div class="app">
-<div class="header">
-<div class="header-top">
-<div class="logo"><span class="logo-icon">🏪</span> ShopKeeper Pro</div>
-<div class="cloud-badge"><span class="cloud-dot" id="syncDot"></span> <span id="syncLabel">Firebase Cloud</span></div>
-</div>
-<div class="search-bar">
-<span>🔍</span>
-<input type="text" id="searchInput" placeholder="Search products, suppliers, contacts..." autocomplete="off">
-<button class="clr-btn" id="clearSearch">✕</button>
-</div>
-</div>
+<div class="phone-frame">
+    <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-right">
+            <span class="status-dot"></span>
+            <span>100%</span>
+        </div>
+    </div>
 
-<div class="content">
-<div class="stats-row">
-<div class="stat-card"><span class="stat-icon">📦</span><span class="stat-val" id="totalProducts">0</span><span class="stat-lbl">Products</span></div>
-<div class="stat-card"><span class="stat-icon">🚚</span><span class="stat-val" id="totalSuppliers">0</span><span class="stat-lbl">Suppliers</span></div>
-<div class="stat-card"><span class="stat-icon">📋</span><span class="stat-val" id="totalEntries">0</span><span class="stat-lbl">Entries</span></div>
-<div class="stat-card"><span class="stat-icon">💰</span><span class="stat-val" id="totalMargin">₹0</span><span class="stat-lbl">Profit</span></div>
-</div>
+    <div class="header">
+        <div class="header-top">
+            <div class="logo">Inventory<span>Calc</span></div>
+            <div class="avatar">SI</div>
+        </div>
+        <div class="company-name">Made by SARR Inc</div>
+        <div class="search-wrap">
+            <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="searchInput" placeholder="Search inventory..." autocomplete="off">
+            <button class="search-clear" id="clearSearch">&#10005;</button>
+        </div>
+    </div>
 
-<div class="actions-row">
-<button class="btn btn-accent" id="btnAdd">➕ Add Entry</button>
-<button class="btn btn-primary" id="btnExport">📤 Export CSV</button>
-<button class="btn btn-danger" id="btnReset">🗑 Clear All</button>
-</div>
+    <div class="content">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="val" id="totalProducts">0</div>
+                <div class="lbl">Products</div>
+            </div>
+            <div class="stat-card">
+                <div class="val" id="totalSuppliers">0</div>
+                <div class="lbl">Suppliers</div>
+            </div>
+            <div class="stat-card">
+                <div class="val" id="totalEntries">0</div>
+                <div class="lbl">Entries</div>
+            </div>
+            <div class="stat-card">
+                <div class="val" id="totalValue">Rs 0</div>
+                <div class="lbl">Stock Value</div>
+            </div>
+        </div>
 
-<div class="list-area">
-<div class="list-head">
-<span class="list-title">📋 All Entries (From Firebase Cloud)</span>
-<span class="list-badge" id="listCount">0 entries</span>
-</div>
-<div class="sync-line" id="syncStatus">Connecting to Firebase...</div>
-<div id="productList"></div>
-</div>
-</div>
+        <div class="section-title">
+            <h3>Inventory List</h3>
+            <span class="count" id="listCount">0 items</span>
+        </div>
+        <div id="productList"></div>
+    </div>
 
-<button class="fab-btn" id="fabAdd">+</button>
-</div>
+    <div class="footer-brand">Made by <strong>SARR Inc</strong></div>
 
-<div class="modal-overlay" id="entryModal">
-<div class="bottom-sheet" id="sheet">
-<div class="sheet-handle"></div>
-<div class="sheet-title" id="modalTitle">Add New Entry</div>
+    <button class="fab" id="fabAdd">+</button>
 
-<div class="field">
-<label>Product Name <span class="req">*</span></label>
-<input type="text" id="fProductName" placeholder="e.g. Basmati Rice" autocomplete="off">
-</div>
+    <div class="modal" id="entryModal">
+        <div class="sheet" id="sheet">
+            <div class="sheet-handle"></div>
+            <h3 id="modalTitle">New Entry</h3>
+            <div class="form-group">
+                <label>Product Name</label>
+                <input type="text" id="fProductName" placeholder="e.g. Basmati Rice" autocomplete="off">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Cost Price (Rs)</label>
+                    <input type="number" id="fCostPrice" placeholder="0.00" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Sale Price (Rs)</label>
+                    <input type="number" id="fSalePrice" placeholder="0.00" step="0.01">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="fDate">
+            </div>
+            <div class="form-group">
+                <label>Supplier</label>
+                <input type="text" id="fSupplier" placeholder="e.g. ABC Traders" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>Contact</label>
+                <input type="text" id="fContact" placeholder="Phone or email" autocomplete="off">
+            </div>
+            <input type="hidden" id="fEditId">
+            <button class="btn-full btn-save" id="btnSave">Save to Device</button>
+            <button class="btn-full btn-cancel" id="btnCancel">Cancel</button>
+        </div>
+    </div>
 
-<div class="row-fields">
-<div class="field">
-<label>Cost Price (₹) <span class="req">*</span></label>
-<input type="number" id="fCostPrice" placeholder="0.00" step="0.01" min="0">
+    <div class="toast" id="toast"></div>
 </div>
-<div class="field">
-<label>Sale Price (₹) <span class="req">*</span></label>
-<input type="number" id="fSalePrice" placeholder="0.00" step="0.01" min="0">
-</div>
-</div>
-
-<div class="field">
-<label>Effective Date <span class="req">*</span></label>
-<input type="date" id="fDate">
-</div>
-
-<div class="field">
-<label>Supplier Name</label>
-<input type="text" id="fSupplier" placeholder="e.g. ABC Traders" autocomplete="off">
-</div>
-
-<div class="field">
-<label>Contact Number</label>
-<input type="tel" id="fContact" placeholder="Phone or email" autocomplete="off">
-</div>
-
-<input type="hidden" id="fEditId" value="">
-
-<button class="btn-block save-btn-block" id="btnSave">💾 Save to Firebase Cloud</button>
-<button class="btn-block cancel-btn-block" id="btnCancel">Cancel</button>
-</div>
-</div>
-
-<div class="confirm-overlay" id="alertDialog">
-<div class="confirm-box">
-<span class="confirm-icon" id="alertIcon">⚠️</span>
-<div class="confirm-title" id="alertTitle">Confirm</div>
-<div class="confirm-msg" id="alertText">Are you sure?</div>
-<div class="confirm-btns">
-<button class="btn-no" id="alertNo">Cancel</button>
-<button class="btn-yes" id="alertYes">Delete</button>
-</div>
-</div>
-</div>
-
-<div class="toast-pop" id="toast"></div>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js">
-</script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js">
-</script>
 
 <script>
-// Firebase Config - Your Project
-var firebaseConfig = {
-  apiKey: "AIzaSyDIfpVbV3K7G7aMQSKI09dcxS1uf1IGf74",
-  authDomain: "al-noor-karyana-28699.firebaseapp.com",
-  projectId: "al-noor-karyana-28699",
-  storageBucket: "al-noor-karyana-28699.firebasestorage.app",
-  messagingSenderId: "956613894846",
-  appId: "1:956613894846:web:3d3285eb65f1a7aca174ef",
-  measurementId: "G-1RSTMHM6FV"
-};
-
-firebase.initializeApp(firebaseConfig);
-var db = firebase.firestore();
-
-db.enablePersistence({ synchronizeTabs: true }).catch(function(err) {
-  console.log('Persistence:', err.code);
-});
-
 (function() {
-  'use strict';
+    'use strict';
+    var STORAGE_KEY = 'inventory_calc_sarr_inc_db';
+    var entries = [];
+    var currentFilter = '';
+    var toastTimer = null;
 
-  var entries = [];
-  var currentFilter = '';
-  var alertCallback = null;
-  var toastTimer = null;
-  var unsubscribe = null;
+    function g(id) { return document.getElementById(id); }
 
-  function g(id) { return document.getElementById(id); }
-
-  var searchInput = g('searchInput');
-  var clearSearch = g('clearSearch');
-  var productList = g('productList');
-  var totalProducts = g('totalProducts');
-  var totalSuppliers = g('totalSuppliers');
-  var totalEntries = g('totalEntries');
-  var totalMargin = g('totalMargin');
-  var listCount = g('listCount');
-  var entryModal = g('entryModal');
-  var sheet = g('sheet');
-  var modalTitle = g('modalTitle');
-  var fProductName = g('fProductName');
-  var fCostPrice = g('fCostPrice');
-  var fSalePrice = g('fSalePrice');
-  var fDate = g('fDate');
-  var fSupplier = g('fSupplier');
-  var fContact = g('fContact');
-  var fEditId = g('fEditId');
-  var alertDialog = g('alertDialog');
-  var alertIcon = g('alertIcon');
-  var alertTitle = g('alertTitle');
-  var alertText = g('alertText');
-  var toast = g('toast');
-  var syncDot = g('syncDot');
-  var syncLabel = g('syncLabel');
-  var syncStatus = g('syncStatus');
-
-  function today() {
-    var d = new Date();
-    var m = d.getMonth() + 1;
-    var day = d.getDate();
-    return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (day < 10 ? '0' : '') + day;
-  }
-
-  function formatDate(ds) {
-    if (!ds) return '-';
-    var p = ds.split('-');
-    return p[2] + '/' + p[1] + '/' + p[0];
-  }
-
-  function esc(s) {
-    if (!s) return '-';
-    s = String(s);
-    s = s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    return s;
-  }
-
-  function showToast(msg, type) {
-    type = type || 'ok';
-    if (toastTimer) clearTimeout(toastTimer);
-    toast.textContent = msg;
-    toast.className = 'toast-pop ' + type + ' show';
-    toastTimer = setTimeout(function() { toast.className = 'toast-pop'; }, 2200);
-  }
-
-  function showAlert(title, text, icon, cb) {
-    alertIcon.textContent = icon || '⚠️';
-    alertTitle.textContent = title;
-    alertText.textContent = text;
-    alertDialog.className = 'confirm-overlay on';
-    alertCallback = cb;
-  }
-
-  function hideAlert() {
-    alertDialog.className = 'confirm-overlay';
-    alertCallback = null;
-  }
-
-  function openModal(title) {
-    modalTitle.textContent = title || 'Add New Entry';
-    entryModal.className = 'modal-overlay on';
-    document.body.style.overflow = 'hidden';
-    setTimeout(function() { if (fProductName) fProductName.focus(); }, 300);
-  }
-
-  function closeModal() {
-    entryModal.className = 'modal-overlay';
-    document.body.style.overflow = '';
-    clearForm();
-  }
-
-  function clearForm() {
-    fProductName.value = '';
-    fCostPrice.value = '';
-    fSalePrice.value = '';
-    fDate.value = today();
-    fSupplier.value = '';
-    fContact.value = '';
-    fEditId.value = '';
-  }
-
-  function updateSync(online) {
-    if (online) {
-      syncDot.className = 'cloud-dot';
-      syncLabel.textContent = 'Cloud Online';
-      syncStatus.textContent = '✅ Showing all entries from Firebase Cloud';
-      syncStatus.style.color = '#10b981';
-    } else {
-      syncDot.className = 'cloud-dot off';
-      syncLabel.textContent = 'Offline';
-      syncStatus.textContent = '📴 Showing cached data (syncs when online)';
-      syncStatus.style.color = '#ef4444';
+    function today() {
+        var d = new Date();
+        return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
     }
-  }
 
-  function ref() {
-    return db.collection('shared').doc('inventory').collection('entries');
-  }
+    function formatDate(ds) {
+        if (!ds) return '';
+        var p = ds.split('-');
+        return p[2] + '/' + p[1] + '/' + p[0];
+    }
 
-  function setupListener() {
-    if (unsubscribe) unsubscribe();
+    function esc(s) {
+        if (!s) return '';
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
 
-    var q = ref().orderBy('productName').orderBy('date', 'desc');
+    function uid() {
+        return 'e' + Date.now().toString(36) + Math.random().toString(36).substr(2,9);
+    }
 
-    // First load - show all entries immediately
-    q.get().then(function(snap) {
-      var list = [];
-      snap.forEach(function(doc) {
-        var d = doc.data();
-        d.id = doc.id;
-        list.push(d);
-      });
-      entries = list;
-      render();
-    }).catch(function(err) {
-      console.log('Initial load error:', err.message);
-    });
+    function showToast(msg, type) {
+        type = type || 'success';
+        var toast = g('toast');
+        if (toastTimer) clearTimeout(toastTimer);
+        toast.textContent = msg;
+        toast.className = 'toast ' + type + ' show';
+        toastTimer = setTimeout(function(){ toast.className = 'toast'; }, 2000);
+    }
 
-    // Real-time listener
-    unsubscribe = q.onSnapshot(
-      function(snap) {
-        var list = [];
-        snap.forEach(function(doc) {
-          var d = doc.data();
-          d.id = doc.id;
-          list.push(d);
+    function loadData() {
+        try {
+            var d = localStorage.getItem(STORAGE_KEY);
+            entries = d ? JSON.parse(d) : [];
+            if (entries.length === 0) {
+                var t = today();
+                entries = [
+                    { id: uid(), name: 'Basmati Rice', cost: 85, sale: 120, date: t, supplier: 'Golden Grains', contact: '9876543210' },
+                    { id: uid(), name: 'Sunflower Oil', cost: 140, sale: 175, date: t, supplier: 'Pure Oils Co.', contact: '9988776655' },
+                    { id: uid(), name: 'Green Tea', cost: 110, sale: 150, date: t, supplier: 'Herbal World', contact: '8899001122' },
+                    { id: uid(), name: 'Wheat Flour', cost: 38, sale: 52, date: t, supplier: 'Agro Traders', contact: '7788990011' },
+                    { id: uid(), name: 'Sugar', cost: 42, sale: 55, date: t, supplier: 'Sweet Suppliers', contact: '6677889900' }
+                ];
+                saveData();
+            }
+        } catch(e) { entries = []; }
+    }
+
+    function saveData() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); } catch(e) {}
+    }
+
+    function render() {
+        var f = currentFilter.toLowerCase();
+        var filtered = entries.filter(function(e) {
+            return !f || (e.name||'').toLowerCase().indexOf(f)!==-1 || (e.supplier||'').toLowerCase().indexOf(f)!==-1 || (e.contact||'').toLowerCase().indexOf(f)!==-1;
         });
-        entries = list;
-        updateSync(true);
-        render();
-      },
-      function(err) {
-        console.log('Snapshot error:', err.message);
-        updateSync(false);
-        render();
-      }
-    );
-  }
+        filtered.sort(function(a,b){
+            var na=(a.name||'').toLowerCase(), nb=(b.name||'').toLowerCase();
+            if(na<nb)return -1; if(na>nb)return 1;
+            return new Date(b.date||0)-new Date(a.date||0);
+        });
+        g('listCount').textContent = filtered.length + ' items';
 
-  function addEntry(data) {
-    return ref().add({
-      productName: data.productName,
-      cost: data.cost,
-      sale: data.sale,
-      date: data.date,
-      supplier: data.supplier || '',
-      contact: data.contact || '',
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-  }
+        var container = g('productList');
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="empty"><div class="empty-icon">&#128230;</div><h4>'+(f?'No results':'No entries')+'</h4><p>'+(f?'Try different search':'Tap + to add product')+'</p></div>';
+        } else {
+            var html = '';
+            for (var i = 0; i < filtered.length; i++) {
+                var e = filtered[i];
+                html += '<div class="card">';
+                html += '<div class="card-top"><div class="card-name">'+esc(e.name)+'</div>';
+                html += '<div class="card-actions"><button class="icon-btn btn-edit" data-eid="'+e.id+'">&#9998;</button>';
+                html += '<button class="icon-btn btn-del" data-did="'+e.id+'">&#128465;</button></div></div>';
+                html += '<div class="price-row"><div class="price-item"><div class="lbl">Cost Price</div><div class="val">Rs '+Number(e.cost||0).toFixed(2)+'</div></div>';
+                html += '<div class="price-item"><div class="lbl">Sale Price</div><div class="val green">Rs '+Number(e.sale||0).toFixed(2)+'</div></div></div>';
+                html += '<div class="meta-row"><span class="tag">'+formatDate(e.date)+'</span>';
+                if(e.supplier) html += '<span class="tag">'+esc(e.supplier)+'</span>';
+                if(e.contact) html += '<span class="tag">'+esc(e.contact)+'</span>';
+                html += '</div></div>';
+            }
+            container.innerHTML = html;
 
-  function updateEntry(id, data) {
-    return ref().doc(id).update({
-      productName: data.productName,
-      cost: data.cost,
-      sale: data.sale,
-      date: data.date,
-      supplier: data.supplier || '',
-      contact: data.contact || '',
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-  }
-
-  function deleteEntry(id) {
-    return ref().doc(id).delete();
-  }
-
-  function clearAll() {
-    return ref().get().then(function(snap) {
-      var batch = db.batch();
-      snap.forEach(function(doc) { batch.delete(doc.ref); });
-      return batch.commit();
-    });
-  }
-
-  function render() {
-    var f = currentFilter.toLowerCase();
-    var filtered = [];
-    for (var i = 0; i < entries.length; i++) {
-      var e = entries[i];
-      if (!f ||
-        (e.productName && e.productName.toLowerCase().indexOf(f) !== -1) ||
-        (e.supplier && e.supplier.toLowerCase().indexOf(f) !== -1) ||
-        (e.contact && e.contact.toLowerCase().indexOf(f) !== -1)) {
-        filtered.push(e);
-      }
-    }
-
-    filtered.sort(function(a, b) {
-      var na = (a.productName || '').toLowerCase();
-      var nb = (b.productName || '').toLowerCase();
-      if (na < nb) return -1;
-      if (na > nb) return 1;
-      return new Date(b.date || 0) - new Date(a.date || 0);
-    });
-
-    listCount.textContent = filtered.length + ' entries';
-
-    if (filtered.length === 0) {
-      productList.innerHTML = '<div class="empty-state"><span class="empty-icon">📭</span><div class="empty-title">' +
-        (f ? 'No matching results' : 'No entries yet') +
-        '</div><div class="empty-text">' +
-        (f ? 'Try different search terms' : 'Tap + to add your first product to Firebase Cloud') +
-        '</div></div>';
-    } else {
-      var html = '';
-      for (var j = 0; j < filtered.length; j++) {
-        var entry = filtered[j];
-        var margin = (entry.sale || 0) - (entry.cost || 0);
-        var mp = (entry.cost || 0) > 0 ? ((margin / entry.cost) * 100).toFixed(1) : 0;
-        var isProfit = margin >= 0;
-
-        html += '<div class="entry-card">';
-        if (margin !== 0) {
-          html += '<div class="margin-badge' + (isProfit ? '' : ' loss') + '">' +
-            (isProfit ? '📈 +' : '📉 ') + mp + '%</div>';
+            var edits = container.querySelectorAll('[data-eid]');
+            for (var j = 0; j < edits.length; j++) {
+                (function(id){ edits[j].onclick=function(e){ e.preventDefault(); handleEdit(id); }; })(edits[j].getAttribute('data-eid'));
+            }
+            var dels = container.querySelectorAll('[data-did]');
+            for (var k = 0; k < dels.length; k++) {
+                (function(id){ dels[k].onclick=function(e){ e.preventDefault(); handleDelete(id); }; })(dels[k].getAttribute('data-did'));
+            }
         }
-        html += '<div class="card-header">';
-        html += '<div class="card-title">' + esc(entry.productName) + '</div>';
-        html += '<div class="card-actions">';
-        html += '<button class="icon-btn btn-edit" data-eid="' + entry.id + '">✏️</button>';
-        html += '<button class="icon-btn btn-del" data-did="' + entry.id + '">🗑️</button>';
-        html += '</div></div>';
-        html += '<div class="prices-row">';
-        html += '<div class="price-box"><div class="price-lbl">Cost Price</div><div class="price-val">₹' + Number(entry.cost || 0).toFixed(2) + '</div></div>';
-        html += '<div class="price-box"><div class="price-lbl">Sale Price</div><div class="price-val green">₹' + Number(entry.sale || 0).toFixed(2) + '</div></div>';
-        html += '</div>';
-        html += '<div class="tags-row">';
-        html += '<span class="tag tag-date">📅 ' + formatDate(entry.date) + '</span>';
-        if (entry.supplier) html += '<span class="tag tag-sup">🚚 ' + esc(entry.supplier) + '</span>';
-        if (entry.contact) html += '<span class="tag tag-con">📞 ' + esc(entry.contact) + '</span>';
-        html += '</div></div>';
-      }
-      productList.innerHTML = html;
 
-      var editBtns = productList.querySelectorAll('[data-eid]');
-      for (var k = 0; k < editBtns.length; k++) {
-        (function(id) {
-          editBtns[k].onclick = function(e) {
-            if (e) { e.preventDefault(); e.stopPropagation(); }
-            handleEdit(id);
-            return false;
-          };
-        })(editBtns[k].getAttribute('data-eid'));
-      }
-
-      var delBtns = productList.querySelectorAll('[data-did]');
-      for (var m = 0; m < delBtns.length; m++) {
-        (function(id) {
-          delBtns[m].onclick = function(e) {
-            if (e) { e.preventDefault(); e.stopPropagation(); }
-            handleDelete(id);
-            return false;
-          };
-        })(delBtns[m].getAttribute('data-did'));
-      }
+        var up={}, us={}, totalStock=0;
+        for (var n=0; n<entries.length; n++) {
+            if(entries[n].name) up[entries[n].name]=true;
+            if(entries[n].supplier) us[entries[n].supplier]=true;
+            totalStock += (entries[n].sale||0);
+        }
+        g('totalProducts').textContent = Object.keys(up).length;
+        g('totalSuppliers').textContent = Object.keys(us).length;
+        g('totalEntries').textContent = entries.length;
+        g('totalValue').textContent = 'Rs ' + totalStock.toFixed(0);
     }
 
-    var up = {}, us = {}, totalM = 0;
-    for (var n = 0; n < entries.length; n++) {
-      if (entries[n].productName) up[entries[n].productName] = true;
-      if (entries[n].supplier) us[entries[n].supplier] = true;
-      totalM += ((entries[n].sale || 0) - (entries[n].cost || 0));
+    function handleEdit(id) {
+        for (var i=0; i<entries.length; i++) {
+            if (entries[i].id === id) {
+                var e = entries[i];
+                g('fProductName').value = e.name||'';
+                g('fCostPrice').value = e.cost||'';
+                g('fSalePrice').value = e.sale||'';
+                g('fDate').value = e.date||today();
+                g('fSupplier').value = e.supplier||'';
+                g('fContact').value = e.contact||'';
+                g('fEditId').value = e.id;
+                g('modalTitle').textContent = 'Edit Entry';
+                g('entryModal').className = 'modal open';
+                return;
+            }
+        }
     }
-    totalProducts.textContent = Object.keys(up).length;
-    totalSuppliers.textContent = Object.keys(us).length;
-    totalEntries.textContent = entries.length;
-    totalMargin.textContent = '₹' + totalM.toFixed(2);
-    if (totalM >= 0) totalMargin.style.color = '#10b981';
-    else totalMargin.style.color = '#ef4444';
-  }
 
-  function handleEdit(id) {
-    for (var i = 0; i < entries.length; i++) {
-      if (entries[i].id === id) {
-        var e = entries[i];
-        fProductName.value = e.productName || '';
-        fCostPrice.value = e.cost || '';
-        fSalePrice.value = e.sale || '';
-        fDate.value = e.date || today();
-        fSupplier.value = e.supplier || '';
-        fContact.value = e.contact || '';
-        fEditId.value = e.id;
-        openModal('Edit Entry');
-        return;
-      }
+    function handleDelete(id) {
+        if (confirm('Delete this entry?')) {
+            entries = entries.filter(function(e){ return e.id !== id; });
+            saveData();
+            render();
+            showToast('Entry deleted!', 'error');
+        }
     }
-  }
 
-  function handleDelete(id) {
-    var entry = null;
-    for (var i = 0; i < entries.length; i++) {
-      if (entries[i].id === id) { entry = entries[i]; break; }
-    }
-    if (!entry) return;
+    function handleSave() {
+        var name = g('fProductName').value.trim();
+        var cost = parseFloat(g('fCostPrice').value);
+        var sale = parseFloat(g('fSalePrice').value);
+        var date = g('fDate').value;
+        var supplier = g('fSupplier').value.trim();
+        var contact = g('fContact').value.trim();
+        var editId = g('fEditId').value;
 
-    showAlert('Delete Entry', 'Remove "' + entry.productName + '" from Firebase Cloud?', '🗑️', function() {
-      deleteEntry(id).then(function() {
-        if (fEditId.value === id) closeModal();
-        showToast('Deleted from cloud!', 'err');
-      }).catch(function(err) {
-        showToast('Error: ' + err.message, 'err');
-      });
-    });
-  }
+        if (!name) { showToast('Enter product name', 'error'); return; }
+        if (isNaN(cost)||cost<0) { showToast('Valid cost required', 'error'); return; }
+        if (isNaN(sale)||sale<0) { showToast('Valid sale required', 'error'); return; }
+        if (!date) { showToast('Select date', 'error'); return; }
 
-  function handleSave() {
-    var pn = fProductName.value.trim();
-    var cost = parseFloat(fCostPrice.value);
-    var sale = parseFloat(fSalePrice.value);
-    var date = fDate.value;
-    var sup = fSupplier.value.trim();
-    var con = fContact.value.trim();
-    var eid = fEditId.value;
-
-    if (!pn) { showToast('Enter product name', 'warn'); return; }
-    if (isNaN(cost) || cost < 0) { showToast('Valid cost required', 'warn'); return; }
-    if (isNaN(sale) || sale < 0) { showToast('Valid sale required', 'warn'); return; }
-    if (!date) { showToast('Select date', 'warn'); return; }
-
-    var data = { productName: pn, cost: cost, sale: sale, date: date, supplier: sup, contact: con };
-
-    if (eid) {
-      updateEntry(eid, data).then(function() {
+        if (editId) {
+            for (var i=0; i<entries.length; i++) {
+                if (entries[i].id === editId) {
+                    entries[i].name=name; entries[i].cost=cost; entries[i].sale=sale;
+                    entries[i].date=date; entries[i].supplier=supplier; entries[i].contact=contact;
+                    break;
+                }
+            }
+        } else {
+            entries.push({ id:uid(), name:name, cost:cost, sale:sale, date:date, supplier:supplier, contact:contact });
+        }
+        saveData();
+        render();
         closeModal();
-        showToast('Updated in Firebase!', 'ok');
-      }).catch(function(err) {
-        showToast('Error: ' + err.message, 'err');
-      });
-    } else {
-      addEntry(data).then(function() {
-        closeModal();
-        showToast('Saved to Firebase Cloud!', 'ok');
-      }).catch(function(err) {
-        showToast('Error: ' + err.message, 'err');
-      });
+        showToast(editId?'Entry updated!':'Entry added!');
     }
-  }
 
-  function handleReset() {
-    showAlert('Clear All Data', 'Delete ALL entries from Firebase Cloud? This is irreversible!', '⚠️', function() {
-      clearAll().then(function() {
-        showToast('All cloud data cleared!', 'err');
-      }).catch(function(err) {
-        showToast('Error: ' + err.message, 'err');
-      });
-    });
-  }
-
-  function handleExport() {
-    if (entries.length === 0) { showToast('Nothing to export', 'warn'); return; }
-    var csv = 'Product,Cost,Sale,Margin,Date,Supplier,Contact\n';
-    for (var i = 0; i < entries.length; i++) {
-      var e = entries[i];
-      var m = ((e.sale || 0) - (e.cost || 0)).toFixed(2);
-      csv += '"' + (e.productName || '') + '","' + (e.cost || 0) + '","' + (e.sale || 0) + '","' + m + '","' + (e.date || '') + '","' + (e.supplier || '') + '","' + (e.contact || '') + '"\n';
+    function closeModal() {
+        g('entryModal').className = 'modal';
+        g('fProductName').value='';
+        g('fCostPrice').value='';
+        g('fSalePrice').value='';
+        g('fDate').value=today();
+        g('fSupplier').value='';
+        g('fContact').value='';
+        g('fEditId').value='';
+        g('modalTitle').textContent='New Entry';
     }
-    var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url; a.download = 'firebase-export-' + today() + '.csv';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    showToast('CSV exported!', 'ok');
-  }
 
-  g('fabAdd').onclick = function() { clearForm(); openModal(); };
-  g('btnAdd').onclick = function() { clearForm(); openModal(); };
-  g('btnSave').onclick = handleSave;
-  g('btnCancel').onclick = closeModal;
-  g('btnReset').onclick = handleReset;
-  g('btnExport').onclick = handleExport;
-  g('alertYes').onclick = function() { if (alertCallback) alertCallback(); hideAlert(); };
-  g('alertNo').onclick = hideAlert;
-  entryModal.onclick = function(e) { if (e.target === entryModal) closeModal(); };
-  alertDialog.onclick = function(e) { if (e.target === alertDialog) hideAlert(); };
+    g('fabAdd').onclick = function(){ closeModal(); g('entryModal').className='modal open'; };
+    g('btnSave').onclick = handleSave;
+    g('btnCancel').onclick = closeModal;
+    g('entryModal').onclick = function(e){ if(e.target===g('entryModal')) closeModal(); };
 
-  searchInput.oninput = function() {
-    currentFilter = searchInput.value;
-    clearSearch.className = currentFilter ? 'clr-btn show' : 'clr-btn';
+    g('searchInput').oninput = function(){
+        currentFilter = this.value;
+        g('clearSearch').className = currentFilter ? 'search-clear show' : 'search-clear';
+        render();
+    };
+    g('clearSearch').onclick = function(){
+        g('searchInput').value='';
+        currentFilter='';
+        g('clearSearch').className='search-clear';
+        render();
+    };
+
+    g('fDate').value = today();
+    loadData();
     render();
-  };
-  clearSearch.onclick = function() {
-    searchInput.value = '';
-    currentFilter = '';
-    clearSearch.className = 'clr-btn';
-    render();
-  };
-
-  var tY = 0;
-  sheet.addEventListener('touchstart', function(e) { tY = e.touches[0].clientY; }, false);
-  sheet.addEventListener('touchmove', function(e) {
-    if (e.touches[0].clientY - tY > 50 && sheet.scrollTop <= 5) closeModal();
-  }, false);
-
-  window.addEventListener('online', function() { updateSync(true); });
-  window.addEventListener('offline', function() { updateSync(false); });
-  if (navigator.onLine) updateSync(true); else updateSync(false);
-
-  g('fDate').value = today();
-  setupListener();
 })();
 </script>
 </body>
